@@ -1,125 +1,168 @@
-import { PixelButton } from "@/components/ui/pixel-button";
-import { PixelCard, PixelCardContent, PixelCardDescription, PixelCardHeader, PixelCardTitle } from "@/components/ui/pixel-card";
-import easeLogo from "@/assets/ease-logo.png";
+import { Button } from "@/components/ui/modern-button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/modern-card";
+import easeLogoModern from "@/assets/ease-logo-modern.png";
+import { Heart, BookOpen, BarChart3, Play, Settings } from "lucide-react";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-light-gradient crt-effect">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-calm">
+      <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12">
-          <img 
-            src={easeLogo} 
-            alt="EASE Logo" 
-            className="w-24 h-24 mx-auto mb-6 pixel-art"
-            style={{ imageRendering: 'pixelated' }}
-          />
-          <h1 className="font-pixel text-2xl md:text-4xl text-foreground mb-4 tracking-wider">
-            EASE
-          </h1>
-          <p className="font-pixel text-xs text-muted-foreground tracking-wide">
-            CHRONIC PAIN RELIEF
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center mb-8">
+            <img 
+              src={easeLogoModern} 
+              alt="EASE Logo" 
+              className="w-16 h-16 mr-4"
+            />
+            <div>
+              <h1 className="font-modern text-4xl md:text-5xl font-bold text-foreground mb-2 tracking-tight">
+                EASE
+              </h1>
+              <p className="font-retro text-xs text-primary tracking-widest uppercase">
+                Chronic Pain Relief
+              </p>
+            </div>
+          </div>
+          <p className="font-modern text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
+            Take control of your pain with evidence-based CBT, DBT, and mindfulness exercises designed for your healing journey.
           </p>
         </div>
 
         {/* Main Navigation Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
           
           {/* Journal */}
-          <PixelCard className="group cursor-pointer transition-all duration-300">
-            <PixelCardHeader>
-              <div className="text-center py-6">
-                <div className="text-4xl mb-4">📔</div>
-                <PixelCardTitle>Journal</PixelCardTitle>
-                <PixelCardDescription className="mt-2">
-                  Record thoughts and track your healing journey
-                </PixelCardDescription>
+          <Card className="group cursor-pointer">
+            <CardHeader>
+              <div className="flex items-center space-x-4 mb-2">
+                <div className="p-3 bg-gradient-primary rounded-xl">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="group-hover:text-primary transition-colors">
+                    Daily Journal
+                  </CardTitle>
+                  <CardDescription>
+                    Record thoughts, track emotions, and document your healing journey
+                  </CardDescription>
+                </div>
               </div>
-            </PixelCardHeader>
-            <PixelCardContent>
-              <PixelButton 
-                variant="retro" 
+            </CardHeader>
+            <CardContent>
+              <Button 
+                variant="wellness" 
                 className="w-full"
                 onClick={() => console.log('Navigate to Journal')}
               >
+                <BookOpen className="w-4 h-4 mr-2" />
                 Open Journal
-              </PixelButton>
-            </PixelCardContent>
-          </PixelCard>
+              </Button>
+            </CardContent>
+          </Card>
 
           {/* Track Pain */}
-          <PixelCard className="group cursor-pointer transition-all duration-300">
-            <PixelCardHeader>
-              <div className="text-center py-6">
-                <div className="text-4xl mb-4">📉</div>
-                <PixelCardTitle>Track Pain</PixelCardTitle>
-                <PixelCardDescription className="mt-2">
-                  Monitor symptoms and view progress trends
-                </PixelCardDescription>
+          <Card className="group cursor-pointer">
+            <CardHeader>
+              <div className="flex items-center space-x-4 mb-2">
+                <div className="p-3 bg-gradient-secondary rounded-xl">
+                  <BarChart3 className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="group-hover:text-primary transition-colors">
+                    Pain Tracking
+                  </CardTitle>
+                  <CardDescription>
+                    Monitor symptoms, log pain levels, and visualize your progress
+                  </CardDescription>
+                </div>
               </div>
-            </PixelCardHeader>
-            <PixelCardContent>
-              <PixelButton 
+            </CardHeader>
+            <CardContent>
+              <Button 
                 variant="secondary" 
                 className="w-full"
                 onClick={() => console.log('Navigate to Pain Tracking')}
               >
-                Track Pain
-              </PixelButton>
-            </PixelCardContent>
-          </PixelCard>
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Track Symptoms
+              </Button>
+            </CardContent>
+          </Card>
 
           {/* Start Session */}
-          <PixelCard className="group cursor-pointer transition-all duration-300">
-            <PixelCardHeader>
-              <div className="text-center py-6">
-                <div className="text-4xl mb-4">🎮</div>
-                <PixelCardTitle>Start Session</PixelCardTitle>
-                <PixelCardDescription className="mt-2">
-                  Begin guided meditation and mindfulness exercises
-                </PixelCardDescription>
+          <Card className="group cursor-pointer md:col-span-2">
+            <CardHeader>
+              <div className="flex items-center space-x-4 mb-2">
+                <div className="p-4 bg-gradient-hero rounded-xl">
+                  <Play className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl group-hover:text-primary transition-colors">
+                    Begin Wellness Session
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    Start guided meditation, mindfulness exercises, and therapeutic practices in immersive environments
+                  </CardDescription>
+                </div>
               </div>
-            </PixelCardHeader>
-            <PixelCardContent>
-              <PixelButton 
-                variant="default" 
-                className="w-full"
+            </CardHeader>
+            <CardContent>
+              <Button 
+                variant="wellness" 
+                size="lg"
+                className="w-full text-lg py-6"
                 onClick={() => console.log('Navigate to Environment Select')}
               >
-                Start Session
-              </PixelButton>
-            </PixelCardContent>
-          </PixelCard>
-
-          {/* Options */}
-          <PixelCard className="group cursor-pointer transition-all duration-300">
-            <PixelCardHeader>
-              <div className="text-center py-6">
-                <div className="text-4xl mb-4">⚙️</div>
-                <PixelCardTitle>Options</PixelCardTitle>
-                <PixelCardDescription className="mt-2">
-                  Customize app settings and preferences
-                </PixelCardDescription>
-              </div>
-            </PixelCardHeader>
-            <PixelCardContent>
-              <PixelButton 
-                variant="outline" 
-                className="w-full"
-                onClick={() => console.log('Navigate to Settings')}
-              >
-                Settings
-              </PixelButton>
-            </PixelCardContent>
-          </PixelCard>
+                <Play className="w-5 h-5 mr-3" />
+                Start Your Session
+              </Button>
+            </CardContent>
+          </Card>
 
         </div>
 
+        {/* Quick Actions */}
+        <div className="max-w-2xl mx-auto">
+          <Card className="retro-pattern">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Settings className="w-5 h-5 text-muted-foreground" />
+                  <CardTitle className="text-lg">Quick Actions</CardTitle>
+                </div>
+                <Heart className="w-5 h-5 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Button 
+                  variant="outline" 
+                  className="justify-start"
+                  onClick={() => console.log('Navigate to Settings')}
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </Button>
+                <Button 
+                  variant="retro" 
+                  className="justify-start"
+                  onClick={() => console.log('Quick pain log')}
+                >
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Quick Log
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Footer */}
-        <div className="text-center mt-12">
-          <p className="font-pixel text-xs text-muted-foreground">
+        <div className="text-center mt-16">
+          <p className="font-modern text-muted-foreground">
             Take control of your pain. One breath at a time.
           </p>
+          <div className="mt-4 w-16 h-1 bg-gradient-primary rounded-full mx-auto"></div>
         </div>
       </div>
     </div>

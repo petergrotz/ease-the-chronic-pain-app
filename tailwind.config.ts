@@ -19,8 +19,9 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'pixel': ['Press Start 2P', 'Courier New', 'monospace'],
 				'retro': ['Press Start 2P', 'Courier New', 'monospace'],
+				'modern': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+				'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -68,18 +69,24 @@ export default {
 				}
 			},
 			backgroundImage: {
-				'retro-gradient': 'var(--gradient-retro)',
-				'dark-gradient': 'var(--gradient-dark)',
-				'light-gradient': 'var(--gradient-light)',
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-secondary': 'var(--gradient-secondary)',
+				'gradient-hero': 'var(--gradient-hero)',
+				'gradient-glass': 'var(--gradient-glass)',
+				'gradient-calm': 'var(--gradient-calm)',
+				'gradient-peace': 'var(--gradient-peace)',
 			},
 			boxShadow: {
-				'pixel': 'var(--shadow-pixel)',
+				'sm': 'var(--shadow-sm)',
+				'md': 'var(--shadow-md)',
+				'lg': 'var(--shadow-lg)',
 				'glow': 'var(--shadow-glow)',
 				'retro': 'var(--shadow-retro)',
 			},
 			transitionTimingFunction: {
-				'retro': 'cubic-bezier(0.25, 0.25, 0.75, 0.75)',
-				'bounce-retro': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+				'bounce-retro': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'gentle': 'ease-out',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
