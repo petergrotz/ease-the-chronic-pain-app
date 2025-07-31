@@ -2,41 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* EASE Design System - Retro Gaming Aesthetic
+All colors MUST be HSL. Custom retro theme with pixel-perfect design.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* EASE Brand Colors */
+    --background: 42 47% 95%;  /* #FAF8F3 - Light cream background */
+    --foreground: 0 0% 17%;    /* #2B2B2B - Dark text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 42 47% 95%;
+    --card-foreground: 0 0% 17%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 42 47% 95%;
+    --popover-foreground: 0 0% 17%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 193 76% 67%;     /* #6EC5E9 - Main blue */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 332 67% 82%;   /* #F4B6D7 - Pink accent */
+    --secondary-foreground: 0 0% 17%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 17%;         /* #2B2B2B - Dark surface */
+    --muted-foreground: 42 47% 95%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 332 67% 82%;     /* #F4B6D7 - Pink accent */
+    --accent-foreground: 0 0% 17%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 193 76% 67%;
+    --input: 42 47% 90%;
+    --ring: 193 76% 67%;
 
-    --radius: 0.5rem;
+    --radius: 4px;             /* Sharp pixel-style corners */
+
+    /* Retro Gaming Gradients */
+    --gradient-retro: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-dark: linear-gradient(180deg, hsl(var(--muted)), hsl(0 0% 10%));
+    --gradient-light: linear-gradient(180deg, hsl(var(--background)), hsl(42 47% 90%));
+
+    /* Pixel Perfect Shadows */
+    --shadow-pixel: 4px 4px 0px hsl(var(--muted));
+    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
+    --shadow-retro: inset 0 0 0 2px hsl(var(--primary)), 4px 4px 0px hsl(var(--muted));
+
+    /* CRT Effect */
+    --scan-lines: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--muted) / 0.03) 2px,
+      hsl(var(--muted) / 0.03) 4px
+    );
+
+    /* Animation Timings */
+    --transition-retro: all 0.15s cubic-bezier(0.25, 0.25, 0.75, 0.75);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +125,63 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    background: var(--scan-lines), hsl(var(--background));
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  /* Retro UI Components */
+  .pixel-button {
+    @apply bg-primary text-primary-foreground font-bold py-3 px-6 transition-all;
+    border: 2px solid hsl(var(--primary));
+    box-shadow: var(--shadow-pixel);
+    transition: var(--transition-retro);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
+  }
+
+  .pixel-button:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px hsl(var(--muted));
+  }
+
+  .pixel-button:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+  }
+
+  .pixel-card {
+    @apply bg-card border-2;
+    border-color: hsl(var(--border));
+    box-shadow: var(--shadow-pixel);
+    transition: var(--transition-bounce);
+  }
+
+  .pixel-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow), var(--shadow-pixel);
+  }
+
+  .retro-gradient {
+    background: var(--gradient-retro);
+  }
+
+  .crt-effect {
+    position: relative;
+  }
+
+  .crt-effect::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--scan-lines);
+    pointer-events: none;
+    opacity: 0.1;
   }
 }
