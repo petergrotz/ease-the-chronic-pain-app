@@ -75,6 +75,7 @@ export default {
 				'gradient-glass': 'var(--gradient-glass)',
 				'gradient-calm': 'var(--gradient-calm)',
 				'gradient-peace': 'var(--gradient-peace)',
+				'gradient-seaglass': 'var(--gradient-seaglass)',
 			},
 			boxShadow: {
 				'sm': 'var(--shadow-sm)',

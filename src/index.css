@@ -8,46 +8,47 @@ All colors MUST be HSL. Premium wellness app aesthetic.
 
 @layer base {
   :root {
-    /* EASE Brand Colors - Modern & Calming */
-    --background: 220 20% 98%;     /* #F8F9FB - Clean white with subtle blue tint */
-    --foreground: 215 25% 15%;     /* #202938 - Rich dark blue-gray */
+    /* EASE Seaglass Colors - Soothing Pastels */
+    --background: 180 25% 97%;     /* Soft seaglass white */
+    --foreground: 180 20% 15%;     /* Deep teal-gray */
 
-    --card: 0 0% 100%;             /* Pure white cards */
-    --card-foreground: 215 25% 15%;
+    --card: 180 30% 98%;           /* Very light mint white */
+    --card-foreground: 180 20% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover: 180 30% 98%;
+    --popover-foreground: 180 20% 15%;
 
-    --primary: 193 76% 67%;        /* #6EC5E9 - Calming blue (original) */
-    --primary-foreground: 0 0% 100%;
+    --primary: 174 45% 65%;        /* Soft seaglass teal */
+    --primary-foreground: 180 25% 97%;
 
-    --secondary: 332 67% 82%;      /* #F4B6D7 - Soft pink accent (original) */
-    --secondary-foreground: 215 25% 15%;
+    --secondary: 160 30% 85%;      /* Gentle mint green */
+    --secondary-foreground: 180 20% 15%;
 
-    --muted: 220 15% 96%;          /* #F5F6F8 - Subtle gray background */
-    --muted-foreground: 215 15% 50%; /* #707A8A - Muted text */
+    --muted: 185 20% 94%;          /* Soft blue-grey background */
+    --muted-foreground: 185 15% 45%; /* Muted teal text */
 
-    --accent: 250 100% 97%;        /* #F0F4FF - Very light purple */
-    --accent-foreground: 215 25% 15%;
+    --accent: 165 35% 88%;         /* Pale seafoam */
+    --accent-foreground: 180 20% 15%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 70% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;         /* #E5E7EB - Soft borders */
-    --input: 220 13% 95%;          /* #F3F4F6 - Input backgrounds */
-    --ring: 193 76% 67%;           /* Primary color for focus rings */
+    --border: 185 20% 90%;         /* Soft mint borders */
+    --input: 185 20% 93%;          /* Light mint inputs */
+    --ring: 174 45% 65%;           /* Seaglass focus rings */
 
     --radius: 12px;                /* Modern rounded corners */
 
-    /* Modern Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(193 70% 75%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(332 60% 88%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
-    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    /* Seaglass Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(174 45% 65%) 0%, hsl(174 35% 75%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(160 30% 85%) 0%, hsl(165 35% 88%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(174 45% 65%) 0%, hsl(160 30% 85%) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
     
-    /* Wellness-focused gradients */
-    --gradient-calm: linear-gradient(180deg, hsl(200 100% 98%) 0%, hsl(220 20% 98%) 100%);
-    --gradient-peace: linear-gradient(45deg, hsl(193 50% 95%) 0%, hsl(332 30% 95%) 100%);
+    /* Seaglass wellness gradients */
+    --gradient-calm: linear-gradient(180deg, hsl(180 25% 97%) 0%, hsl(174 25% 92%) 100%);
+    --gradient-peace: linear-gradient(45deg, hsl(174 30% 90%) 0%, hsl(160 25% 88%) 100%);
+    --gradient-seaglass: linear-gradient(135deg, hsl(180 35% 85%) 0%, hsl(165 40% 88%) 100%);
 
     /* Modern Shadows */
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);

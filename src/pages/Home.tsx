@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/modern-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/modern-card";
-import easeLogoModern from "@/assets/ease-logo-modern.png";
-import { Heart, BookOpen, BarChart3, Play, Settings } from "lucide-react";
+import EnvironmentCarousel from "@/components/EnvironmentCarousel";
+import easeLogoClouds from "@/assets/ease-logo-clouds.png";
+import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
 
 const Home = () => {
   return (
@@ -9,20 +10,12 @@ const Home = () => {
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-8">
+          <div className="flex justify-center mb-8">
             <img 
-              src={easeLogoModern} 
-              alt="EASE Logo" 
-              className="w-16 h-16 mr-4"
+              src={easeLogoClouds} 
+              alt="EASE" 
+              className="w-auto h-24 md:h-32"
             />
-            <div>
-              <h1 className="font-modern text-4xl md:text-5xl font-bold text-foreground mb-2 tracking-tight">
-                EASE
-              </h1>
-              <p className="font-retro text-xs text-primary tracking-widest uppercase">
-                Chronic Pain Relief
-              </p>
-            </div>
           </div>
           <p className="font-modern text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
             Take control of your pain with evidence-based CBT, DBT, and mindfulness exercises designed for your healing journey.
@@ -30,7 +23,7 @@ const Home = () => {
         </div>
 
         {/* Main Navigation Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           
           {/* Journal */}
           <Card className="group cursor-pointer">
@@ -90,36 +83,11 @@ const Home = () => {
             </CardContent>
           </Card>
 
-          {/* Start Session */}
-          <Card className="group cursor-pointer md:col-span-2">
-            <CardHeader>
-              <div className="flex items-center space-x-4 mb-2">
-                <div className="p-4 bg-gradient-hero rounded-xl">
-                  <Play className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <CardTitle className="text-2xl group-hover:text-primary transition-colors">
-                    Begin Wellness Session
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    Start guided meditation, mindfulness exercises, and therapeutic practices in immersive environments
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                variant="wellness" 
-                size="lg"
-                className="w-full text-lg py-6"
-                onClick={() => console.log('Navigate to Environment Select')}
-              >
-                <Play className="w-5 h-5 mr-3" />
-                Start Your Session
-              </Button>
-            </CardContent>
-          </Card>
+        </div>
 
+        {/* Environment Selection Carousel */}
+        <div className="mb-12">
+          <EnvironmentCarousel />
         </div>
 
         {/* Quick Actions */}
