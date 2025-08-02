@@ -3,12 +3,12 @@ import { Card, CardContent } from "@/components/ui/modern-card";
 import { Button } from "@/components/ui/modern-button";
 import { Play } from "lucide-react";
 
-// Import environment images
-import forestMeadow from "@/assets/environments/forest-meadow.png";
-import snowyGarden from "@/assets/environments/snowy-garden.png";
-import cozyRainyDay from "@/assets/environments/cozy-rainy-day.png";
-import starryNight from "@/assets/environments/starry-night.png";
-import tropicalBeach from "@/assets/environments/tropical-beach.png";
+// Use the uploaded environment images directly
+const forestMeadow = "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png";
+const snowyGarden = "/lovable-uploads/b57d8d62-e588-4736-b270-b83356e82d3d.png";
+const cozyRainyDay = "/lovable-uploads/38fa2365-88c6-408b-bccb-884c473228aa.png";
+const starryNight = "/lovable-uploads/d2353ea7-9a43-4581-a6e6-60b2aadc3eae.png";
+const tropicalBeach = "/lovable-uploads/4e07f67f-896c-4899-91ce-eee9bf5b32ce.png";
 
 const environments = [
   {
