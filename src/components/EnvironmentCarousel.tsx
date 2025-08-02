@@ -12,10 +12,16 @@ const tropicalBeach = "/lovable-uploads/4e07f67f-896c-4899-91ce-eee9bf5b32ce.png
 
 const environments = [
   {
+    id: "mountain-meadow",
+    name: "Mountain Meadow",
+    image: forestMeadow,
+    description: "Peaceful mountain vista with a cozy reading spot"
+  },
+  {
     id: "forest-meadow",
     name: "Forest Meadow",
     image: forestMeadow,
-    description: "Peaceful mountain vista with a cozy reading spot"
+    description: "Serene forest clearing with mountain backdrop"
   },
   {
     id: "snowy-garden", 
