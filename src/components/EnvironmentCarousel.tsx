@@ -99,8 +99,8 @@ const EnvironmentCarousel = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="hidden md:flex -left-12 bg-primary/10 border-primary/20 hover:bg-primary/20" />
-        <CarouselNext className="hidden md:flex -right-12 bg-primary/10 border-primary/20 hover:bg-primary/20" />
+        <CarouselPrevious className="flex -left-4 md:-left-12 bg-primary/10 border-primary/20 hover:bg-primary/20" />
+        <CarouselNext className="flex -right-4 md:-right-12 bg-primary/10 border-primary/20 hover:bg-primary/20" />
       </Carousel>
     </div>
   );

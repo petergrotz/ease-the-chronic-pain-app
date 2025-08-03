@@ -10,11 +10,11 @@ const Home = () => {
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-2">
             <img 
               src={easeLogoClouds} 
               alt="EASE" 
-              className="w-auto h-48 md:h-64 lg:h-72"
+              className="w-auto h-56 md:h-72 lg:h-80"
             />
           </div>
           <p className="font-modern text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
