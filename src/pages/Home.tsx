@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/modern-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/modern-card";
 import EnvironmentCarousel from "@/components/EnvironmentCarousel";
-const easeLogoClouds = "/lovable-uploads/b0d45d58-ae00-4160-8818-3c39e859d6ed.png";
+const easeLogoClouds = "/lovable-uploads/ab156088-a078-4ea1-ab55-6f47188c6e4f.png";
 import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
 
 const Home = () => {
