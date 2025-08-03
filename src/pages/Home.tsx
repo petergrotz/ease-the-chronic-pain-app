@@ -8,13 +8,13 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-calm">
       {/* Header Banner */}
-      <header className="bg-gradient-glass border-b border-border/20 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center">
+      <header className="bg-gradient-calm border-b border-primary/10 shadow-gentle">
+        <div className="container mx-auto px-4 py-5">
+          <div className="flex items-center justify-center">
             <img 
               src={easeLogoClouds} 
               alt="EASE" 
-              className="w-auto h-12 md:h-14"
+              className="w-auto h-16 md:h-18"
             />
           </div>
         </div>
