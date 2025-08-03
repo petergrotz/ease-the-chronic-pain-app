@@ -14,7 +14,7 @@ const Home = () => {
             <img 
               src={easeLogoClouds} 
               alt="EASE" 
-              className="w-auto h-16 md:h-18"
+              className="w-auto h-20 md:h-24"
             />
           </div>
         </div>
