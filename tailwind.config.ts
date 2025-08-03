@@ -21,7 +21,7 @@ export default {
 			fontFamily: {
 				'retro': ['Press Start 2P', 'Courier New', 'monospace'],
 				'modern': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-				'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+				'sans': ['Press Start 2P', 'Courier New', 'monospace'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

@@ -133,11 +133,12 @@ All colors MUST be HSL. Premium wellness app aesthetic.
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 400;
+    @apply bg-background text-foreground;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.6;
     background: var(--gradient-calm);
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: auto;
     -moz-osx-font-smoothing: grayscale;
   }
 
