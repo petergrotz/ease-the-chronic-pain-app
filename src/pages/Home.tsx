@@ -7,16 +7,22 @@ import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-calm">
-      <div className="container mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-2">
+      {/* Header Banner */}
+      <header className="bg-gradient-glass border-b border-border/20 shadow-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center">
             <img 
               src={easeLogoClouds} 
               alt="EASE" 
-              className="w-auto h-32 md:h-40 lg:h-48"
+              className="w-auto h-12 md:h-14"
             />
           </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Welcome Message */}
+        <div className="text-center mb-12">
           <p className="font-modern text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
             Take control of your pain with evidence-based CBT, DBT, and mindfulness exercises designed for your healing journey.
           </p>
