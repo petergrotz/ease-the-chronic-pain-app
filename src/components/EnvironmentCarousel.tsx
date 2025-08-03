@@ -61,7 +61,13 @@ const EnvironmentCarousel = () => {
         </p>
       </div>
       
-      <Carousel className="w-full max-w-6xl mx-auto">
+      <Carousel 
+        className="w-full max-w-6xl mx-auto"
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+      >
         <CarouselContent className="-ml-4">
           {environments.map((environment) => (
             <CarouselItem key={environment.id} className="pl-4 basis-full md:basis-1/2 lg:basis-1/3">
