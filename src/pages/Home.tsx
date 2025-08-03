@@ -22,11 +22,6 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Environment Selection Carousel */}
-        <div className="mb-12">
-          <EnvironmentCarousel />
-        </div>
-
         {/* Main Navigation Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           
@@ -88,6 +83,11 @@ const Home = () => {
             </CardContent>
           </Card>
 
+        </div>
+
+        {/* Environment Selection Carousel */}
+        <div className="mb-12">
+          <EnvironmentCarousel />
         </div>
 
         {/* Quick Actions */}
