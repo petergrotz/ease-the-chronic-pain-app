@@ -30,12 +30,6 @@ const environmentData = {
     audio: "/Campfire at night sound.mp3",
     image: "/lovable-uploads/780328a3-0b8b-4aa3-a1af-d61ce7fa6a47.png"
   },
-  5: {
-    name: "Cozy Rainy Day",
-    video: "/20250804_1720_Cozy Cabin Retreat_loop_01k1vsjx86fepajg9knasqfwqx.mp4",
-    audio: "/Cozy Cabin Retreat sound.mp3",
-    image: "/lovable-uploads/38fa2365-88c6-408b-bccb-884c473228aa.png"
-  },
   6: {
     name: "Cat Cafe",
     video: "/Cozy Cafe Video.mp4",
@@ -62,13 +56,13 @@ const environmentData = {
   },
   10: {
     name: "Verdant Greenhouse",
-    video: "/Zen Garden Video.mp4",
-    audio: "/Zen garden sound.mp3",
+    video: null,
+    audio: "/Greenhouse music.mp3",
     image: "/lovable-uploads/5b071dfe-e537-46ea-b5ef-2eb7374076c4.png"
   },
   11: {
     name: "Cozy Mountain Lodge",
-    video: null,
+    video: "/20250804_1720_Cozy Cabin Retreat_loop_01k1vsjx86fepajg9knasqfwqx.mp4",
     audio: "/Cozy Cabin Retreat sound.mp3",
     image: "/lovable-uploads/64c38433-d24d-47ba-8bf7-ec4091688485.png"
   }
@@ -180,12 +174,9 @@ const EnvironmentSession = () => {
       {/* Start Session Text - Center */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-retro text-white drop-shadow-lg mb-4">
+          <h1 className="text-xl md:text-2xl font-retro text-white drop-shadow-lg">
             Start Session
           </h1>
-          <p className="text-lg md:text-xl text-white/90 drop-shadow-md">
-            {environment.name}
-          </p>
         </div>
       </div>
 
