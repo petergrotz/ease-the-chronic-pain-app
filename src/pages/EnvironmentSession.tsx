@@ -32,7 +32,7 @@ const environmentData = {
   },
   5: {
     name: "Cozy Rainy Day",
-    video: null,
+    video: "/20250804_1720_Cozy Cabin Retreat_loop_01k1vsjx86fepajg9knasqfwqx.mp4",
     audio: "/Cozy Cabin Retreat sound.mp3",
     image: "/lovable-uploads/38fa2365-88c6-408b-bccb-884c473228aa.png"
   },
@@ -138,7 +138,7 @@ const EnvironmentSession = () => {
       {environment.video ? (
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-contain bg-black"
           autoPlay
           loop
           muted
@@ -148,7 +148,7 @@ const EnvironmentSession = () => {
         </video>
       ) : (
         <div
-          className="absolute inset-0 h-full w-full bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 h-full w-full bg-contain bg-center bg-no-repeat bg-black"
           style={{
             backgroundImage: `url(${environment.image})`,
           }}
