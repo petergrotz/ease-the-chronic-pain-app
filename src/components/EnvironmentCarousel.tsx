@@ -1,8 +1,10 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/modern-card";
 import { Button } from "@/components/ui/modern-button";
-import { Play } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Play, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 // Use the uploaded environment images directly
 const forestMeadow = "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png";
@@ -83,8 +85,16 @@ const environments = [
 const EnvironmentCarousel = () => {
   const navigate = useNavigate();
 
-  const handleStartSession = (environmentId: number) => {
-    navigate(`/session/${environmentId}`);
+  const activityOptions = [
+    "Body Scan",
+    "Progressive Muscle Relaxation", 
+    "Activity Pacing",
+    "Pain Education"
+  ];
+
+  const handleActivitySelect = (environmentId: number, activity: string) => {
+    console.log(`Starting ${activity} in environment ${environmentId}`);
+    navigate(`/session/${environmentId}?activity=${encodeURIComponent(activity)}`);
   };
 
   return (
@@ -126,17 +136,35 @@ const EnvironmentCarousel = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="p-4">
-                     <Button 
-                       variant="wellness" 
-                       size="sm"
-                       className="w-full text-sm"
-                       onClick={() => handleStartSession(environment.id)}
-                     >
-                      <Play className="w-4 h-4 mr-2" />
-                      Start Session
-                    </Button>
-                  </div>
+                   <div className="p-4">
+                     <DropdownMenu>
+                       <DropdownMenuTrigger asChild>
+                         <Button 
+                           variant="wellness" 
+                           size="sm"
+                           className="w-full text-sm"
+                         >
+                           <Play className="w-4 h-4 mr-2" />
+                           Start Session
+                           <ChevronDown className="w-4 h-4 ml-auto" />
+                         </Button>
+                       </DropdownMenuTrigger>
+                       <DropdownMenuContent 
+                         className="w-56 bg-background/95 backdrop-blur-sm border border-border/50 z-50"
+                         align="center"
+                       >
+                         {activityOptions.map((activity) => (
+                           <DropdownMenuItem
+                             key={activity}
+                             onClick={() => handleActivitySelect(environment.id, activity)}
+                             className="font-retro text-sm cursor-pointer hover:bg-primary/10 focus:bg-primary/10"
+                           >
+                             {activity}
+                           </DropdownMenuItem>
+                         ))}
+                       </DropdownMenuContent>
+                     </DropdownMenu>
+                   </div>
                 </CardContent>
               </Card>
             </CarouselItem>
