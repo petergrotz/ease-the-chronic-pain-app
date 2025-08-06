@@ -4,73 +4,73 @@ import { ArrowLeft, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
-// Environment data mapping
+// Environment data mapping using the same uploaded images from the carousel
 const environmentData = {
   1: {
     name: "Forest Meadow",
     video: null,
     audio: "/Forest Meadow sound.mp3",
-    image: "/src/assets/environments/forest-meadow.png"
+    image: "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png"
   },
   2: {
     name: "Snowy Garden",
     video: null,
     audio: "/Zen garden sound.mp3",
-    image: "/src/assets/environments/snowy-garden.png"
+    image: "/lovable-uploads/b57d8d62-e588-4736-b270-b83356e82d3d.png"
   },
   3: {
     name: "Tropical Beach",
     video: null,
     audio: "/Lake sound.mp3",
-    image: "/src/assets/environments/tropical-beach.png"
+    image: "/lovable-uploads/4e07f67f-896c-4899-91ce-eee9bf5b32ce.png"
   },
   4: {
     name: "Starry Night Campfire",
     video: "/Campfire Video.mp4",
     audio: "/Campfire at night sound.mp3",
-    image: "/src/assets/environments/starry-night.png"
+    image: "/lovable-uploads/780328a3-0b8b-4aa3-a1af-d61ce7fa6a47.png"
   },
   5: {
     name: "Cozy Rainy Day",
     video: null,
     audio: "/Cozy Cabin Retreat sound.mp3",
-    image: "/src/assets/environments/cozy-rainy-day.png"
+    image: "/lovable-uploads/38fa2365-88c6-408b-bccb-884c473228aa.png"
   },
   6: {
     name: "Cat Cafe",
     video: "/Cozy Cafe Video.mp4",
     audio: "/Cafe Sound.mp3",
-    image: null
+    image: "/lovable-uploads/5d39738b-cee2-4aeb-b213-58a4eed50438.png"
   },
   7: {
     name: "Lakeside Retreat",
     video: "/Lakeside Retreat Video.mp4",
     audio: "/Lake sound.mp3",
-    image: null
+    image: "/lovable-uploads/e5e6ddbd-8f7f-47b3-97ec-37cb07049f25.png"
   },
   8: {
     name: "Mountaintop Dawn",
     video: "/Mountain Sunrise Video.mp4",
     audio: "/Forest Meadow sound.mp3",
-    image: null
+    image: "/lovable-uploads/cd383841-bc09-4ef7-9a25-ef939e071f23.png"
   },
   9: {
     name: "Relaxing Spa",
     video: "/Spa Retreat Video.mp4",
     audio: "/spa sound.mp3",
-    image: null
+    image: "/lovable-uploads/acc2697c-41d0-48a5-9ea0-e71b200e34d0.png"
   },
   10: {
     name: "Verdant Greenhouse",
     video: "/Zen Garden Video.mp4",
     audio: "/Zen garden sound.mp3",
-    image: null
+    image: "/lovable-uploads/5b071dfe-e537-46ea-b5ef-2eb7374076c4.png"
   },
   11: {
     name: "Cozy Mountain Lodge",
     video: null,
     audio: "/Cozy Cabin Retreat sound.mp3",
-    image: "/src/assets/environments/cozy-rainy-day.png"
+    image: "/lovable-uploads/64c38433-d24d-47ba-8bf7-ec4091688485.png"
   }
 };
 
