@@ -14,7 +14,7 @@ const environmentData = {
   },
   2: {
     name: "Snowy Garden",
-    video: null,
+    video: "/Zen Garden Video.mp4",
     audio: "/Zen garden sound.mp3",
     image: "/lovable-uploads/b57d8d62-e588-4736-b270-b83356e82d3d.png"
   },
@@ -154,6 +154,17 @@ const EnvironmentSession = () => {
         <audio ref={audioRef} preload="auto">
           <source src={environment.audio} type="audio/mpeg" />
         </audio>
+      )}
+
+      {/* Logo overlay to cover watermarks on videos */}
+      {environment.video && (
+        <div className="absolute bottom-4 right-4 z-10">
+          <img 
+            src="/lovable-uploads/104c1d42-a0cc-4b8d-854e-dcfa6841a8a5.png" 
+            alt="Ease Logo" 
+            className="w-16 h-16 opacity-90"
+          />
+        </div>
       )}
 
       {/* Overlay for better text visibility */}
