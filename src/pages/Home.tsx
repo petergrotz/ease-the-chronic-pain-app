@@ -17,7 +17,7 @@ const Home = () => {
               className="w-auto h-32 md:h-40 lg:h-48"
             />
           </div>
-          <p className="font-retro text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
+          <p className="font-retro text-sm text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
             Take control of your pain with evidence-based CBT, DBT, and mindfulness exercises designed for your healing journey.
           </p>
         </div>
@@ -36,7 +36,7 @@ const Home = () => {
                   <CardTitle className="group-hover:text-primary transition-colors font-retro">
                     Daily Journal
                   </CardTitle>
-                  <CardDescription className="font-retro">
+                  <CardDescription className="font-retro text-xs">
                     Record thoughts, track emotions, and document your healing journey
                   </CardDescription>
                 </div>
@@ -65,7 +65,7 @@ const Home = () => {
                   <CardTitle className="group-hover:text-primary transition-colors font-retro">
                     Pain Tracking
                   </CardTitle>
-                  <CardDescription className="font-retro">
+                  <CardDescription className="font-retro text-xs">
                     Monitor symptoms, log pain levels, and visualize your progress
                   </CardDescription>
                 </div>
@@ -127,7 +127,7 @@ const Home = () => {
 
         {/* Footer */}
         <div className="text-center mt-16">
-          <p className="font-retro text-muted-foreground">
+          <p className="font-retro text-sm text-muted-foreground">
             Take control of your pain. One breath at a time.
           </p>
           <div className="mt-4 w-16 h-1 bg-gradient-primary rounded-full mx-auto"></div>
