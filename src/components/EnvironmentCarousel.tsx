@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 // Use the uploaded environment images directly
 const forestMeadow = "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png";
 const snowyGarden = "/lovable-uploads/b57d8d62-e588-4736-b270-b83356e82d3d.png";
-const cozyRainyDay = "/lovable-uploads/38fa2365-88c6-408b-bccb-884c473228aa.png";
+
 const tropicalBeach = "/lovable-uploads/4e07f67f-896c-4899-91ce-eee9bf5b32ce.png";
 const starryNightCampfire = "/lovable-uploads/780328a3-0b8b-4aa3-a1af-d61ce7fa6a47.png";
 const mountaintopDawn = "/lovable-uploads/cd383841-bc09-4ef7-9a25-ef939e071f23.png";
@@ -41,12 +41,6 @@ const environments = [
     name: "Starry Night Campfire",
     image: starryNightCampfire,
     description: "Peaceful campfire under starlit sky"
-  },
-  {
-    id: 5,
-    name: "Cozy Rainy Day", 
-    image: cozyRainyDay,
-    description: "Warm indoor sanctuary with gentle rain"
   },
   {
     id: 6,
