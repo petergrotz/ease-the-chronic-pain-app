@@ -7,8 +7,13 @@ import { Play } from "lucide-react";
 const forestMeadow = "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png";
 const snowyGarden = "/lovable-uploads/b57d8d62-e588-4736-b270-b83356e82d3d.png";
 const cozyRainyDay = "/lovable-uploads/38fa2365-88c6-408b-bccb-884c473228aa.png";
-const starryNight = "/lovable-uploads/d2353ea7-9a43-4581-a6e6-60b2aadc3eae.png";
 const tropicalBeach = "/lovable-uploads/4e07f67f-896c-4899-91ce-eee9bf5b32ce.png";
+const starryNightCampfire = "/lovable-uploads/780328a3-0b8b-4aa3-a1af-d61ce7fa6a47.png";
+const mountaintopDawn = "/lovable-uploads/cd383841-bc09-4ef7-9a25-ef939e071f23.png";
+const relaxingSpa = "/lovable-uploads/acc2697c-41d0-48a5-9ea0-e71b200e34d0.png";
+const cozyMountainLodge = "/lovable-uploads/64c38433-d24d-47ba-8bf7-ec4091688485.png";
+const verdantGreenhouse = "/lovable-uploads/5b071dfe-e537-46ea-b5ef-2eb7374076c4.png";
+const catCafe = "/lovable-uploads/5d39738b-cee2-4aeb-b213-58a4eed50438.png";
 
 const environments = [
   {
@@ -30,16 +35,46 @@ const environments = [
     description: "Warm indoor sanctuary with gentle rain"
   },
   {
-    id: "starry-night",
-    name: "Starry Night",
-    image: starryNight,
-    description: "Peaceful night sky filled with stars"
-  },
-  {
     id: "tropical-beach",
     name: "Tropical Beach",
     image: tropicalBeach,
     description: "Serene beach with palm trees and ocean"
+  },
+  {
+    id: "starry-night-campfire",
+    name: "Starry Night Campfire",
+    image: starryNightCampfire,
+    description: "Peaceful campfire under starlit sky"
+  },
+  {
+    id: "mountaintop-dawn",
+    name: "Mountaintop Dawn",
+    image: mountaintopDawn,
+    description: "Tranquil sunrise over mountain peaks"
+  },
+  {
+    id: "relaxing-spa",
+    name: "Relaxing Spa",
+    image: relaxingSpa,
+    description: "Luxurious spa sanctuary with fountain"
+  },
+  {
+    id: "cozy-mountain-lodge",
+    name: "Cozy Mountain Lodge",
+    image: cozyMountainLodge,
+    description: "Warm lodge with fireplace and snowy views"
+  },
+  {
+    id: "verdant-greenhouse",
+    name: "Verdant Greenhouse",
+    image: verdantGreenhouse,
+    description: "Lush greenhouse filled with plants"
+  },
+  {
+    id: "cat-cafe",
+    name: "Cat Cafe",
+    image: catCafe,
+    description: "Cozy cafe with feline companions"
   }
 ];
 
