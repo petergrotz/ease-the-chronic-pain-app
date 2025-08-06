@@ -156,15 +156,6 @@ const EnvironmentSession = () => {
         </audio>
       )}
 
-      {/* Logo overlay to cover watermarks - positioned on the media content */}
-      <div className="absolute bottom-8 right-20 z-30">
-        <img 
-          src="/lovable-uploads/104c1d42-a0cc-4b8d-854e-dcfa6841a8a5.png" 
-          alt="Ease Logo" 
-          className="w-16 h-16 opacity-90"
-        />
-      </div>
-
       {/* Overlay for better text visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
 
