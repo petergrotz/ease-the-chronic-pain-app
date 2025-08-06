@@ -2,6 +2,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Card, CardContent } from "@/components/ui/modern-card";
 import { Button } from "@/components/ui/modern-button";
 import { Play } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Use the uploaded environment images directly
 const forestMeadow = "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png";
@@ -18,74 +19,80 @@ const lakesideRetreat = "/lovable-uploads/e5e6ddbd-8f7f-47b3-97ec-37cb07049f25.p
 
 const environments = [
   {
-    id: "forest-meadow",
+    id: 1,
     name: "Forest Meadow",
     image: forestMeadow,
     description: "Serene forest clearing with mountain backdrop"
   },
   {
-    id: "snowy-garden", 
+    id: 2,
     name: "Snowy Garden",
     image: snowyGarden,
     description: "Tranquil Japanese garden in winter"
   },
   {
-    id: "cozy-rainy-day",
-    name: "Cozy Rainy Day", 
-    image: cozyRainyDay,
-    description: "Warm indoor sanctuary with gentle rain"
-  },
-  {
-    id: "tropical-beach",
+    id: 3,
     name: "Tropical Beach",
     image: tropicalBeach,
     description: "Serene beach with palm trees and ocean"
   },
   {
-    id: "starry-night-campfire",
+    id: 4,
     name: "Starry Night Campfire",
     image: starryNightCampfire,
     description: "Peaceful campfire under starlit sky"
   },
   {
-    id: "mountaintop-dawn",
-    name: "Mountaintop Dawn",
-    image: mountaintopDawn,
-    description: "Tranquil sunrise over mountain peaks"
+    id: 5,
+    name: "Cozy Rainy Day", 
+    image: cozyRainyDay,
+    description: "Warm indoor sanctuary with gentle rain"
   },
   {
-    id: "relaxing-spa",
-    name: "Relaxing Spa",
-    image: relaxingSpa,
-    description: "Luxurious spa sanctuary with fountain"
-  },
-  {
-    id: "cozy-mountain-lodge",
-    name: "Cozy Mountain Lodge",
-    image: cozyMountainLodge,
-    description: "Warm lodge with fireplace and snowy views"
-  },
-  {
-    id: "verdant-greenhouse",
-    name: "Verdant Greenhouse",
-    image: verdantGreenhouse,
-    description: "Lush greenhouse filled with plants"
-  },
-  {
-    id: "cat-cafe",
+    id: 6,
     name: "Cat Cafe",
     image: catCafe,
     description: "Cozy cafe with feline companions"
   },
   {
-    id: "lakeside-retreat",
+    id: 7,
     name: "Lakeside Retreat",
     image: lakesideRetreat,
     description: "Peaceful dock overlooking mountain lake"
+  },
+  {
+    id: 8,
+    name: "Mountaintop Dawn",
+    image: mountaintopDawn,
+    description: "Tranquil sunrise over mountain peaks"
+  },
+  {
+    id: 9,
+    name: "Relaxing Spa",
+    image: relaxingSpa,
+    description: "Luxurious spa sanctuary with fountain"
+  },
+  {
+    id: 10,
+    name: "Verdant Greenhouse",
+    image: verdantGreenhouse,
+    description: "Lush greenhouse filled with plants"
+  },
+  {
+    id: 11,
+    name: "Cozy Mountain Lodge",
+    image: cozyMountainLodge,
+    description: "Warm lodge with fireplace and snowy views"
   }
 ];
 
 const EnvironmentCarousel = () => {
+  const navigate = useNavigate();
+
+  const handleStartSession = (environmentId: number) => {
+    navigate(`/session/${environmentId}`);
+  };
+
   return (
     <div className="w-full">
       <div className="text-center mb-6">
@@ -126,12 +133,12 @@ const EnvironmentCarousel = () => {
                     </div>
                   </div>
                   <div className="p-4">
-                    <Button 
-                      variant="wellness" 
-                      size="sm"
-                      className="w-full text-sm"
-                      onClick={() => console.log(`Selected environment: ${environment.id}`)}
-                    >
+                     <Button 
+                       variant="wellness" 
+                       size="sm"
+                       className="w-full text-sm"
+                       onClick={() => handleStartSession(environment.id)}
+                     >
                       <Play className="w-4 h-4 mr-2" />
                       Start Session
                     </Button>
