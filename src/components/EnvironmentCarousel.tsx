@@ -14,6 +14,7 @@ const relaxingSpa = "/lovable-uploads/acc2697c-41d0-48a5-9ea0-e71b200e34d0.png";
 const cozyMountainLodge = "/lovable-uploads/64c38433-d24d-47ba-8bf7-ec4091688485.png";
 const verdantGreenhouse = "/lovable-uploads/5b071dfe-e537-46ea-b5ef-2eb7374076c4.png";
 const catCafe = "/lovable-uploads/5d39738b-cee2-4aeb-b213-58a4eed50438.png";
+const lakesideRetreat = "/lovable-uploads/e5e6ddbd-8f7f-47b3-97ec-37cb07049f25.png";
 
 const environments = [
   {
@@ -75,6 +76,12 @@ const environments = [
     name: "Cat Cafe",
     image: catCafe,
     description: "Cozy cafe with feline companions"
+  },
+  {
+    id: "lakeside-retreat",
+    name: "Lakeside Retreat",
+    image: lakesideRetreat,
+    description: "Peaceful dock overlooking mountain lake"
   }
 ];
 
