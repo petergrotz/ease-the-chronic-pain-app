@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Volume2 } from "lucide-react";
+import { ArrowLeft, Volume2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Environment data mapping using the same uploaded images from the carousel
 const environmentData = {
@@ -76,7 +77,19 @@ const EnvironmentSession = () => {
   const [volume, setVolume] = useState([80]);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
 
+  const activityOptions = [
+    "Body Scan",
+    "Progressive Muscle Relaxation", 
+    "Activity Pacing",
+    "Pain Education"
+  ];
+
   const environment = environmentData[Number(environmentId) as keyof typeof environmentData];
+
+  const handleActivitySelect = (activity: string) => {
+    console.log(`Starting ${activity} in ${environment.name}`);
+    // Here you would implement the logic for each activity
+  };
 
   useEffect(() => {
     if (!environment) {
@@ -171,12 +184,34 @@ const EnvironmentSession = () => {
         </Button>
       </div>
 
-      {/* Start Session Text - Center */}
+      {/* Start Session Dropdown - Center */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <div className="text-center">
-          <h1 className="text-xl md:text-2xl font-retro text-white drop-shadow-lg">
-            Start Session
-          </h1>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="secondary"
+                className="bg-black/40 hover:bg-black/60 text-white border-white/20 backdrop-blur-sm px-8 py-4 text-lg"
+              >
+                <span className="font-retro">Start Session</span>
+                <ChevronDown className="w-5 h-5 ml-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent 
+              className="w-64 bg-black/80 backdrop-blur-sm border border-white/20 z-50"
+              align="center"
+            >
+              {activityOptions.map((activity) => (
+                <DropdownMenuItem
+                  key={activity}
+                  onClick={() => handleActivitySelect(activity)}
+                  className="font-retro text-white text-base cursor-pointer hover:bg-white/10 focus:bg-white/10 py-3"
+                >
+                  {activity}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
