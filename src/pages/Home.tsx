@@ -15,6 +15,14 @@ const Home = () => {
         console.log('Audio autoplay prevented:', error);
       });
     }
+
+    // Cleanup function to stop audio when leaving the page
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
   }, []);
   return (
     <div className="min-h-screen bg-gradient-calm">
