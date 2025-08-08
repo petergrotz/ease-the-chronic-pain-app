@@ -94,9 +94,9 @@ const EnvironmentSession = () => {
     console.log(`Starting ${activity} in ${environment.name}`);
     
     if (activity === "Body Scan") {
-      // Stop ambient audio
+      // Keep ambient audio playing in background, just lower its volume
       if (audioRef.current) {
-        audioRef.current.pause();
+        audioRef.current.volume = (volume[0] / 100) * 0.3; // Lower ambient volume to 30% of slider value
       }
       
       // Play ElevenLabs body scan audio
@@ -123,9 +123,9 @@ const EnvironmentSession = () => {
     const handleEnded = () => {
       setIsBodyScanPlaying(false);
       setAudioProgress(0);
-      // Resume ambient audio
+      // Restore ambient audio volume to full
       if (audioRef.current && environment.audio) {
-        audioRef.current.play().catch(console.warn);
+        audioRef.current.volume = volume[0] / 100;
       }
     };
 
@@ -174,12 +174,13 @@ const EnvironmentSession = () => {
   // Update audio volume when slider changes
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume[0] / 100;
+      // If body scan is playing, keep ambient audio at lower volume, otherwise full volume
+      audioRef.current.volume = isBodyScanPlaying ? (volume[0] / 100) * 0.3 : volume[0] / 100;
     }
     if (bodyScanAudioRef.current) {
       bodyScanAudioRef.current.volume = volume[0] / 100;
     }
-  }, [volume]);
+  }, [volume, isBodyScanPlaying]);
 
   if (!environment) {
     return null;
