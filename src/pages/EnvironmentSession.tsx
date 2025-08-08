@@ -74,6 +74,7 @@ const EnvironmentSession = () => {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const bodyScanAudioRef = useRef<HTMLAudioElement>(null);
   const [volume, setVolume] = useState([80]);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
 
@@ -88,7 +89,20 @@ const EnvironmentSession = () => {
 
   const handleActivitySelect = (activity: string) => {
     console.log(`Starting ${activity} in ${environment.name}`);
-    // Here you would implement the logic for each activity
+    
+    if (activity === "Body Scan") {
+      // Stop ambient audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      
+      // Play ElevenLabs body scan audio
+      if (bodyScanAudioRef.current) {
+        bodyScanAudioRef.current.currentTime = 0;
+        bodyScanAudioRef.current.volume = volume[0] / 100;
+        bodyScanAudioRef.current.play().catch(console.warn);
+      }
+    }
   };
 
   useEffect(() => {
@@ -129,6 +143,9 @@ const EnvironmentSession = () => {
     if (audioRef.current) {
       audioRef.current.volume = volume[0] / 100;
     }
+    if (bodyScanAudioRef.current) {
+      bodyScanAudioRef.current.volume = volume[0] / 100;
+    }
   }, [volume]);
 
   if (!environment) {
@@ -162,12 +179,17 @@ const EnvironmentSession = () => {
         />
       )}
 
-      {/* Audio Element */}
+      {/* Audio Elements */}
       {environment.audio && (
         <audio ref={audioRef} preload="auto">
           <source src={environment.audio} type="audio/mpeg" />
         </audio>
       )}
+      
+      {/* ElevenLabs Body Scan Audio */}
+      <audio ref={bodyScanAudioRef} preload="auto">
+        <source src="/ElevenLabs_2025-08-08T22_26_34_Eryn - Therapist, Doctor, Trusted Friend, Meditation, Psychiatrist_pvc_sp70_s90_sb75_se20_b_m2.mp3" type="audio/mpeg" />
+      </audio>
 
       {/* Overlay for better text visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
