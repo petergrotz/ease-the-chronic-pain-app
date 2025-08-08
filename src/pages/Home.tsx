@@ -3,36 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import EnvironmentCarousel from "@/components/EnvironmentCarousel";
 const easeLogoClouds = "/lovable-uploads/ab156088-a078-4ea1-ab55-6f47188c6e4f.png";
 import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
-import { useEffect, useRef } from "react";
 
 const Home = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.3; // Set volume to 30%
-      audioRef.current.play().catch(error => {
-        console.log('Audio autoplay prevented:', error);
-      });
-    }
-
-    // Cleanup function to stop audio when leaving the page
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    };
-  }, []);
   return (
     <div className="min-h-screen bg-gradient-calm">
-      {/* Background Music */}
-      <audio 
-        ref={audioRef}
-        loop
-        preload="auto"
-        src="/inspiration-soothing-amp-relaxing-music-313115.mp3"
-      />
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-16">
