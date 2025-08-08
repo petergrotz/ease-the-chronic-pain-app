@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Volume2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Progress } from "@/components/ui/progress";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Environment data mapping using the same uploaded images from the carousel
@@ -77,6 +78,8 @@ const EnvironmentSession = () => {
   const bodyScanAudioRef = useRef<HTMLAudioElement>(null);
   const [volume, setVolume] = useState([80]);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
+  const [isBodyScanPlaying, setIsBodyScanPlaying] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
 
   const activityOptions = [
     "Body Scan",
@@ -98,12 +101,42 @@ const EnvironmentSession = () => {
       
       // Play ElevenLabs body scan audio
       if (bodyScanAudioRef.current) {
+        setIsBodyScanPlaying(true);
+        setAudioProgress(0);
         bodyScanAudioRef.current.currentTime = 0;
         bodyScanAudioRef.current.volume = volume[0] / 100;
         bodyScanAudioRef.current.play().catch(console.warn);
       }
     }
   };
+
+  // Setup body scan audio event listeners
+  useEffect(() => {
+    const audio = bodyScanAudioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      const progress = (audio.currentTime / audio.duration) * 100;
+      setAudioProgress(progress);
+    };
+
+    const handleEnded = () => {
+      setIsBodyScanPlaying(false);
+      setAudioProgress(0);
+      // Resume ambient audio
+      if (audioRef.current && environment.audio) {
+        audioRef.current.play().catch(console.warn);
+      }
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [environment.audio]);
 
   useEffect(() => {
     if (!environment) {
@@ -194,6 +227,22 @@ const EnvironmentSession = () => {
       {/* Overlay for better text visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
 
+      {/* Progress Bar - Top of Screen (only show when body scan is playing) */}
+      {isBodyScanPlaying && (
+        <div className="absolute top-0 left-0 right-0 z-30 p-4">
+          <div className="bg-black/60 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+            <div className="flex items-center gap-3 text-white">
+              <span className="text-sm">Body Scan Session</span>
+              <Progress 
+                value={audioProgress} 
+                className="flex-1 h-2 bg-white/20" 
+              />
+              <span className="text-sm">{Math.round(audioProgress)}%</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Return to Main Menu Button - Top Left */}
       <div className="absolute top-6 left-6 z-20">
         <Button
@@ -206,36 +255,38 @@ const EnvironmentSession = () => {
         </Button>
       </div>
 
-      {/* Start Session Dropdown - Center */}
-      <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="text-center">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="secondary"
-                className="bg-black/40 hover:bg-black/60 text-white border-white/20 backdrop-blur-sm px-8 py-4 text-lg"
-              >
-                <span className="font-retro">Start Session</span>
-                <ChevronDown className="w-5 h-5 ml-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              className="w-64 bg-black/80 backdrop-blur-sm border border-white/20 z-50"
-              align="center"
-            >
-              {activityOptions.map((activity) => (
-                <DropdownMenuItem
-                  key={activity}
-                  onClick={() => handleActivitySelect(activity)}
-                  className="font-retro text-white text-base cursor-pointer hover:bg-white/10 focus:bg-white/10 py-3"
+      {/* Start Session Dropdown - Center (only show when not playing body scan) */}
+      {!isBodyScanPlaying && (
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="text-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="secondary"
+                  className="bg-black/40 hover:bg-black/60 text-white border-white/20 backdrop-blur-sm px-8 py-4 text-lg"
                 >
-                  {activity}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <span className="font-retro">Start Session</span>
+                  <ChevronDown className="w-5 h-5 ml-2" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                className="w-64 bg-black/80 backdrop-blur-sm border border-white/20 z-50"
+                align="center"
+              >
+                {activityOptions.map((activity) => (
+                  <DropdownMenuItem
+                    key={activity}
+                    onClick={() => handleActivitySelect(activity)}
+                    className="font-retro text-white text-base cursor-pointer hover:bg-white/10 focus:bg-white/10 py-3"
+                  >
+                    {activity}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Volume Control - Bottom Right */}
       <div 
