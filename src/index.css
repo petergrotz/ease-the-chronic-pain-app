@@ -181,7 +181,7 @@ All colors MUST be HSL. Premium wellness app aesthetic.
   }
 
   .wellness-card {
-    @apply bg-card rounded-2xl p-6 border border-border;
+    @apply bg-card rounded-none p-6 border border-border;
     box-shadow: var(--shadow-sm);
     transition: var(--transition-smooth);
     background: hsl(var(--card));
