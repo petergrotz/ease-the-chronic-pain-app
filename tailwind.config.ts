@@ -20,8 +20,9 @@ export default {
 		extend: {
 			fontFamily: {
 				'retro': ['Press Start 2P', 'Courier New', 'monospace'],
+				'gaming': ['Orbitron', 'system-ui', 'sans-serif'],
 				'modern': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-				'sans': ['Press Start 2P', 'Courier New', 'monospace'],
+				'sans': ['Orbitron', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

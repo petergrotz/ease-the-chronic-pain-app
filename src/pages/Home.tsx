@@ -17,7 +17,7 @@ const Home = () => {
               className="w-auto h-32 md:h-40 lg:h-48"
             />
           </div>
-          <p className="font-modern text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
+          <p className="font-gaming text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
             Take control of your pain with evidence-based CBT, DBT, and mindfulness exercises designed for your healing journey.
           </p>
         </div>
@@ -73,7 +73,7 @@ const Home = () => {
             </CardHeader>
             <CardContent>
               <Button 
-                variant="secondary" 
+                variant="default" 
                 className="w-full"
                 onClick={() => console.log('Navigate to Pain Tracking')}
               >
@@ -127,7 +127,7 @@ const Home = () => {
 
         {/* Footer */}
         <div className="text-center mt-16">
-          <p className="font-modern text-muted-foreground">
+          <p className="font-gaming text-muted-foreground">
             Take control of your pain. One breath at a time.
           </p>
           <div className="mt-4 w-16 h-1 bg-primary rounded-full mx-auto"></div>
