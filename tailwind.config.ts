@@ -19,11 +19,11 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'retro': ['Press Start 2P', 'Courier New', 'monospace'],
-				'gaming': ['VT323', 'monospace'],
-				'pokemon': ['VT323', 'monospace'],
-				'modern': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-				'sans': ['VT323', 'monospace'],
+				'retro': ['Share Tech Mono', 'monospace'],
+				'gaming': ['Share Tech Mono', 'monospace'],
+				'pokemon': ['Share Tech Mono', 'monospace'],
+				'modern': ['Share Tech Mono', 'monospace'],
+				'sans': ['Share Tech Mono', 'monospace'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

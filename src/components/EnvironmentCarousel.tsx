@@ -90,10 +90,10 @@ const EnvironmentCarousel = () => {
   return (
     <div className="w-full">
       <div className="text-center mb-6">
-        <h2 className="font-modern text-2xl font-semibold text-foreground mb-2">
+        <h2 className="font-pokemon text-2xl font-semibold text-foreground mb-2">
           Begin Wellness Session
         </h2>
-        <p className="font-modern text-sm text-muted-foreground">
+        <p className="font-pokemon text-sm text-muted-foreground">
           Choose your virtual environment
         </p>
       </div>
@@ -118,10 +118,10 @@ const EnvironmentCarousel = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
-                      <h3 className="font-modern font-semibold text-white text-lg mb-1 drop-shadow-lg">
+                      <h3 className="font-pokemon font-semibold text-white text-lg mb-1 drop-shadow-lg">
                         {environment.name}
                       </h3>
-                      <p className="font-modern text-white/90 text-xs drop-shadow-md">
+                      <p className="font-pokemon text-white/90 text-xs drop-shadow-md">
                         {environment.description}
                       </p>
                     </div>
