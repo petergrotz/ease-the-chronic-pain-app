@@ -6,7 +6,7 @@ import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-calm">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-16">
@@ -29,7 +29,7 @@ const Home = () => {
           <Card className="group cursor-pointer">
             <CardHeader>
               <div className="flex items-center space-x-4 mb-2">
-                <div className="p-3 bg-gradient-primary rounded-xl">
+                <div className="p-3 bg-primary rounded-xl">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -44,7 +44,7 @@ const Home = () => {
             </CardHeader>
             <CardContent>
               <Button 
-                variant="wellness" 
+                variant="default" 
                 className="w-full"
                 onClick={() => console.log('Navigate to Journal')}
               >
@@ -58,7 +58,7 @@ const Home = () => {
           <Card className="group cursor-pointer">
             <CardHeader>
               <div className="flex items-center space-x-4 mb-2">
-                <div className="p-3 bg-gradient-secondary rounded-xl">
+                <div className="p-3 bg-secondary rounded-xl">
                   <BarChart3 className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -130,7 +130,7 @@ const Home = () => {
           <p className="font-modern text-muted-foreground">
             Take control of your pain. One breath at a time.
           </p>
-          <div className="mt-4 w-16 h-1 bg-gradient-primary rounded-full mx-auto"></div>
+          <div className="mt-4 w-16 h-1 bg-primary rounded-full mx-auto"></div>
         </div>
       </div>
     </div>
