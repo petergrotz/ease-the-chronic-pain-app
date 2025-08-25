@@ -2,12 +2,14 @@ import { Button } from "@/components/ui/modern-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/modern-card";
 import EnvironmentCarousel from "@/components/EnvironmentCarousel";
 import JournalDialog from "@/components/JournalDialog";
+import PainTrackerDialog from "@/components/PainTrackerDialog";
 const easeLogoClouds = "/lovable-uploads/ab156088-a078-4ea1-ab55-6f47188c6e4f.png";
 import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
 import { useState } from "react";
 
 const Home = () => {
   const [journalOpen, setJournalOpen] = useState(false);
+  const [painTrackerOpen, setPainTrackerOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,7 +84,7 @@ const Home = () => {
               <Button 
                 variant="default" 
                 className="w-full"
-                onClick={() => console.log('Navigate to Pain Tracking')}
+                onClick={() => setPainTrackerOpen(true)}
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
                 Track Symptoms
@@ -144,6 +146,10 @@ const Home = () => {
       <JournalDialog 
         open={journalOpen} 
         onOpenChange={setJournalOpen} 
+      />
+      <PainTrackerDialog 
+        open={painTrackerOpen} 
+        onOpenChange={setPainTrackerOpen} 
       />
     </div>
   );

@@ -42,6 +42,14 @@ All colors MUST be HSL. Premium wellness app aesthetic.
     --eggshell: 60 10% 96%;        /* Warm eggshell */
     --eggshell-foreground: 180 20% 15%;
 
+    /* Pain tracker colors - Pale mist blue theme */
+    --pain-primary: 200 50% 70%;    /* Soft misty blue */
+    --pain-primary-foreground: 200 60% 15%;
+    --pain-accent: 190 40% 85%;     /* Light blue-grey */
+    --pain-accent-foreground: 190 30% 25%;
+    --pain-bg: 195 30% 96%;         /* Very pale mist blue */
+    --pain-muted: 195 25% 90%;      /* Subtle blue-grey */
+
     --radius: 12px;                /* Modern rounded corners */
 
     /* Seaglass Gradients */
@@ -156,6 +164,16 @@ All colors MUST be HSL. Premium wellness app aesthetic.
     letter-spacing: 0.025em;
     position: relative;
     overflow: hidden;
+  }
+
+  /* Pain tracker dialog styling */
+  .pain-tracker-dialog {
+    background: hsl(var(--pain-bg));
+    border: 1px solid hsl(var(--pain-muted));
+  }
+
+  .pain-tracker-dialog .space-y-6 > * {
+    background: transparent;
   }
 
   .modern-button:hover {

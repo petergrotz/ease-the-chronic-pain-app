@@ -68,6 +68,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				pain: {
+					primary: 'hsl(var(--pain-primary))',
+					'primary-foreground': 'hsl(var(--pain-primary-foreground))',
+					accent: 'hsl(var(--pain-accent))',
+					'accent-foreground': 'hsl(var(--pain-accent-foreground))',
+					bg: 'hsl(var(--pain-bg))',
+					muted: 'hsl(var(--pain-muted))'
 				}
 			},
 			backgroundImage: {
