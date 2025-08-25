@@ -220,13 +220,13 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
             </div>
 
             <div className="mb-4 text-center">
-              <p className="font-retro text-sm text-muted-foreground leading-relaxed">
+              <p className="font-retro text-sm text-white leading-relaxed">
                 This is your journaling space — a gentle place to reflect on your body, your pain, and the small moments of ease. Choose a prompt below, or just start writing what's on your mind.
               </p>
             </div>
 
             <div className="mb-4">
-              <Select onValueChange={addPromptToText}>
+              <Select onValueChange={addPromptToText} value="">
                 <SelectTrigger className="w-full font-retro bg-secondary/30 border-border text-foreground rounded-xl">
                   <SelectValue placeholder="Inspiration to get you started..." />
                   <ChevronDown className="w-4 h-4" />
