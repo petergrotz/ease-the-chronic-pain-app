@@ -178,26 +178,26 @@ All colors MUST be HSL. Premium wellness app aesthetic.
 
   /* Pain tracker slider styling - Pale blue theme */
   .pain-slider [data-radix-slider-track] {
-    background-color: hsl(210 30% 88%) !important;  /* Pale blue track */
+    background-color: hsl(var(--pain-muted)) !important;  /* Pale blue track */
   }
   
   .pain-slider [data-radix-slider-range] {
-    background-color: hsl(210 45% 65%) !important;  /* Pale blue fill */
+    background-color: hsl(var(--pain-primary)) !important;  /* Pale blue fill */
   }
   
   .pain-slider [data-radix-slider-thumb] {
-    border-color: hsl(210 45% 65%) !important;  /* Pale blue border */
-    background-color: hsl(210 30% 96%) !important;   /* Very light blue background */
+    border-color: hsl(var(--pain-primary)) !important;  /* Pale blue border */
+    background-color: hsl(var(--pain-bg)) !important;   /* Very light blue background */
     border-width: 2px;
   }
   
   .pain-slider [data-radix-slider-thumb]:focus-visible {
-    box-shadow: 0 0 0 2px hsl(210 45% 65%) !important;
+    box-shadow: 0 0 0 2px hsl(var(--pain-primary)) !important;
   }
   
   .pain-slider [data-radix-slider-thumb]:hover {
-    background-color: hsl(210 45% 65%) !important;
-    border-color: hsl(210 45% 65%) !important;
+    background-color: hsl(var(--pain-primary)) !important;
+    border-color: hsl(var(--pain-primary)) !important;
   }
 
   /* Make sure all slider components use pale blue */
