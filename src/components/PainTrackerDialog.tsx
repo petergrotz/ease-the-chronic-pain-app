@@ -112,7 +112,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[80vh] font-retro border-2 border-pain-primary/20 text-foreground backdrop-blur-sm rounded-2xl" style={{backgroundColor: 'hsl(var(--pain-bg))'}}>
         <DialogHeader>
-          <DialogTitle className="font-retro text-2xl text-center flex items-center justify-center gap-3">
+          <DialogTitle className="font-retro text-2xl text-center flex items-center justify-center gap-3 text-pain-primary">
             {view === 'history' && (
               <button
                 onClick={() => setView('entry')}
@@ -122,7 +122,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               </button>
             )}
             <Heart className="w-6 h-6 text-pain-primary" />
-            {view === 'entry' && "Track how your pain feels right now"}
+            {view === 'entry' && "Track your trends and symptoms"}
             {view === 'post-save' && "What helped today?"}
             {view === 'history' && "Your Pain Timeline"}
           </DialogTitle>
@@ -226,7 +226,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               </div>
 
               {/* Save Button */}
-              <Button onClick={handleSave} className="w-full" size="lg">
+              <Button onClick={handleSave} className="w-full bg-pain-primary text-pain-primary-foreground hover:bg-pain-primary/80" size="lg">
                 <Save className="w-4 h-4 mr-2" />
                 Save Log
               </Button>

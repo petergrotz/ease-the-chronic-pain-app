@@ -177,25 +177,21 @@ All colors MUST be HSL. Premium wellness app aesthetic.
   }
 
   /* Pain tracker slider styling */
-  .pain-slider .react-flow__slider-track {
-    background-color: hsl(var(--pain-muted));
-  }
-
-  .pain-slider [data-orientation="horizontal"] {
+  .pain-slider [data-radix-slider-track] {
     background-color: hsl(var(--pain-muted));
   }
   
-  .pain-slider [data-orientation="horizontal"] [data-state] {
+  .pain-slider [data-radix-slider-range] {
     background-color: hsl(var(--pain-primary));
   }
   
-  .pain-slider button {
+  .pain-slider [data-radix-slider-thumb] {
     border-color: hsl(var(--pain-primary));
     background-color: hsl(var(--pain-bg));
   }
   
-  .pain-slider button:focus-visible {
-    ring-color: hsl(var(--pain-primary));
+  .pain-slider [data-radix-slider-thumb]:focus-visible {
+    box-shadow: 0 0 0 2px hsl(var(--pain-primary));
   }
 
   .modern-button:hover {
