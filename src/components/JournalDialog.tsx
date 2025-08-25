@@ -193,7 +193,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] font-tech bg-black/90 border-2 border-primary/30 text-white">
+      <DialogContent className="max-w-4xl h-[80vh] font-tech bg-black/70 border-2 border-primary/30 text-white">
         <DialogHeader>
           <DialogTitle className="font-tech text-2xl text-center text-primary">
             {view === 'compose' && "Your Micro-Journal"}
@@ -207,7 +207,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="outline" 
                 onClick={() => setView('history')}
-                className="font-tech"
+                className="font-tech text-black hover:text-black"
               >
                 View Journal
               </Button>
@@ -246,14 +246,14 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 value={journalText}
                 onChange={(e) => setJournalText(e.target.value)}
                 placeholder="Write a few lines. Anything is welcome."
-                className="h-full resize-none font-tech bg-background/50 border-border/50 text-white placeholder:text-muted-foreground"
+                className="h-full resize-none font-tech bg-background/50 border-border/50 text-white placeholder:text-white/70"
               />
             </div>
 
             <div className="flex justify-between">
               <Button 
                 variant="outline" 
-                className="font-tech"
+                className="font-tech text-black hover:text-black"
                 onClick={() => {
                   // Voice-to-text placeholder
                   toast({
@@ -269,7 +269,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 variant="default" 
                 onClick={saveEntry}
                 disabled={!journalText.trim()}
-                className="font-tech"
+                className="font-tech text-black hover:text-black"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Save Entry
@@ -284,7 +284,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="default" 
                 onClick={() => setView('compose')}
-                className="font-tech"
+                className="font-tech text-black hover:text-black"
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 Start Journaling
