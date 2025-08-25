@@ -50,7 +50,10 @@ const Home = () => {
               <Button 
                 variant="default" 
                 className="w-full"
-                onClick={() => setJournalOpen(true)}
+                onClick={() => {
+                  console.log('Opening journal dialog...');
+                  setJournalOpen(true);
+                }}
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 Open Journal
