@@ -193,9 +193,9 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] font-tech bg-black/70 border-2 border-primary/30 text-white">
-        <DialogHeader>
-          <DialogTitle className="font-tech text-2xl text-center text-primary">
+      <DialogContent className="max-w-4xl h-[80vh] font-tech bg-journal-bg border-2 border-journal-border rounded-[20px] text-journal-text">
+        <DialogHeader className="border-b border-journal-border/30 pb-4 mb-6">
+          <DialogTitle className="font-tech text-2xl text-center text-journal-prompt">
             {view === 'compose' && "Your Micro-Journal"}
             {view === 'history' && "Your Small Notes of Care"}
           </DialogTitle>
@@ -207,31 +207,31 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="outline" 
                 onClick={() => setView('history')}
-                className="font-tech text-black hover:text-black"
+                className="font-tech bg-journal-bg-alt border-journal-border text-journal-text hover:bg-journal-border/20 rounded-full px-6 py-2"
               >
                 View Journal
               </Button>
             </div>
 
-            <div className="mb-6 text-center">
-              <p className="font-tech text-sm text-muted-foreground leading-relaxed">
+            <div className="mb-6 text-center px-6">
+              <p className="font-tech text-sm text-journal-prompt/80 leading-relaxed">
                 This is your journaling space — a gentle place to reflect on your body, your pain, and the small moments of ease. Choose a prompt below, or just start writing what's on your mind.
               </p>
             </div>
 
-            <div className="mb-4">
+            <div className="mb-6 px-6">
               <Select onValueChange={addPromptToText}>
-                <SelectTrigger className="w-full font-tech bg-background/50 border-border/50 text-white rounded-none">
-                  <SelectValue placeholder="Inspiration to get you started..." />
-                  <ChevronDown className="w-4 h-4" />
+                <SelectTrigger className="w-full font-tech bg-journal-bg-alt border-journal-border text-journal-text rounded-[16px] py-3 px-4 focus:border-journal-focus focus:ring-2 focus:ring-journal-focus/20">
+                  <SelectValue placeholder="Inspiration to get you started..." className="text-journal-placeholder" />
+                  <ChevronDown className="w-4 h-4 text-journal-border" />
                 </SelectTrigger>
-                <SelectContent className="max-h-[300px] bg-background border-border/50 rounded-none z-50">
-                  <div className="bg-background">
+                <SelectContent className="max-h-[300px] bg-journal-bg border-journal-border rounded-[16px] z-50">
+                  <div className="bg-journal-bg">
                     {MICRO_PROMPTS.map((prompt, index) => (
                       <SelectItem 
                         key={index} 
                         value={prompt}
-                        className="font-tech text-sm py-3 px-4 hover:bg-card/70 focus:bg-card/70 text-white"
+                        className="font-tech text-sm py-3 px-4 hover:bg-journal-bg-alt focus:bg-journal-bg-alt text-journal-text"
                       >
                         {prompt}
                       </SelectItem>
@@ -241,19 +241,19 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               </Select>
             </div>
 
-            <div className="flex-1 mb-4">
+            <div className="flex-1 mb-6 px-6">
               <Textarea
                 value={journalText}
                 onChange={(e) => setJournalText(e.target.value)}
-                placeholder="Write a few lines. Anything is welcome."
-                className="h-full resize-none font-tech bg-background/50 border-border/50 text-white placeholder:text-white/70"
+                placeholder="A few lines is plenty. This is your space…"
+                className="h-full resize-none font-tech bg-journal-bg-alt border-journal-border text-journal-text placeholder:text-journal-placeholder rounded-[16px] p-6 focus:border-journal-focus focus:ring-2 focus:ring-journal-focus/20 transition-all"
               />
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between px-6">
               <Button 
                 variant="outline" 
-                className="font-tech text-black hover:text-black"
+                className="font-tech bg-journal-bg-alt border-journal-border text-journal-text hover:bg-journal-border/20 rounded-full px-6 py-2"
                 onClick={() => {
                   // Voice-to-text placeholder
                   toast({
@@ -269,7 +269,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 variant="default" 
                 onClick={saveEntry}
                 disabled={!journalText.trim()}
-                className="font-tech text-black hover:text-black"
+                className="font-tech bg-gradient-to-r from-journal-focus to-journal-border text-white hover:from-journal-focus/90 hover:to-journal-border/90 rounded-full px-8 py-2 shadow-lg"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Save Entry
@@ -284,58 +284,58 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="default" 
                 onClick={() => setView('compose')}
-                className="font-tech text-black hover:text-black"
+                className="font-tech bg-gradient-to-r from-journal-focus to-journal-border text-white hover:from-journal-focus/90 hover:to-journal-border/90 rounded-full px-6 py-2 shadow-lg"
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 Start Journaling
               </Button>
             </div>
 
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 px-6">
               {entries.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="text-center py-8 text-journal-prompt/70">
                   <p className="font-tech text-lg">First step counts. Pick a prompt to begin.</p>
                 </div>
               ) : (
-                <div className="space-y-4 p-4">
+                <div className="space-y-4">
                   {entries.map((entry) => (
                     <div 
                       key={entry.id}
-                      className="bg-card/50 border border-border/50 p-4 rounded-none"
+                      className="bg-journal-bg-alt border border-journal-border p-6 rounded-[16px] shadow-sm"
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xl">{entry.emoji}</span>
-                          <span className="font-tech text-primary">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">{entry.emoji}</span>
+                          <span className="font-tech text-journal-prompt font-medium">
                             {formatDate(entry.timestamp)}
                           </span>
                         </div>
                       </div>
                       
                       {entry.prompt_text && (
-                        <p className="font-tech text-sm text-muted-foreground mb-2">
+                        <p className="font-tech text-sm text-journal-prompt/70 mb-3">
                           {entry.prompt_text}
                         </p>
                       )}
                       
-                      <div className="font-tech text-sm">
+                      <div className="font-tech text-sm text-journal-text">
                         {expandedEntry === entry.id ? (
                           <div>
-                            <p className="whitespace-pre-wrap">{entry.body}</p>
+                            <p className="whitespace-pre-wrap leading-relaxed">{entry.body}</p>
                             <button
                               onClick={() => setExpandedEntry(null)}
-                              className="text-primary hover:underline mt-2"
+                              className="text-journal-focus hover:underline mt-3 font-medium"
                             >
                               Show less
                             </button>
                           </div>
                         ) : (
                           <div>
-                            <p>{truncateText(entry.body)}</p>
+                            <p className="leading-relaxed">{truncateText(entry.body)}</p>
                             {entry.body.length > 100 && (
                               <button
                                 onClick={() => setExpandedEntry(entry.id)}
-                                className="text-primary hover:underline mt-2"
+                                className="text-journal-focus hover:underline mt-3 font-medium"
                               >
                                 Read more
                               </button>

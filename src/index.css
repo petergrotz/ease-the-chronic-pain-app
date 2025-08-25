@@ -86,6 +86,15 @@ All colors MUST be HSL. Premium wellness app aesthetic.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Journal color palette */
+    --journal-bg: 156 65% 95%; /* #F0FBF8 */
+    --journal-bg-alt: 156 45% 93%; /* #E6F8F3 */
+    --journal-border: 156 35% 70%; /* #9DDAC6 */
+    --journal-focus: 168 65% 45%; /* #2BBF9D */
+    --journal-text: 0 0% 17%; /* #2C2C2C */
+    --journal-prompt: 156 15% 26%; /* #3A4A47 */
+    --journal-placeholder: 156 25% 62%; /* #7FAAA0 */
   }
 
   .dark {
