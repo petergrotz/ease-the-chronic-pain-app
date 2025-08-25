@@ -256,42 +256,48 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               </Select>
             </div>
 
-            <div className="flex-1 mb-4 min-h-[300px]">
-              <Textarea
-                value={journalText}
-                onChange={(e) => setJournalText(e.target.value)}
-                placeholder="Write a few lines. Anything is welcome."
-                className="h-full resize-none font-retro border-border placeholder:text-muted-foreground rounded-xl p-4 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.5)] focus:ring-2 focus:ring-cyan-400/30"
-                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-              />
-            </div>
+            <div className="flex-1 min-h-0">
+              <ScrollArea className="h-full">
+                <div className="space-y-4 px-1">
+                  <div className="min-h-[200px] md:min-h-[300px]">
+                    <Textarea
+                      value={journalText}
+                      onChange={(e) => setJournalText(e.target.value)}
+                      placeholder="Write a few lines. Anything is welcome."
+                      className="h-full min-h-[200px] md:min-h-[300px] resize-none font-retro border-border placeholder:text-muted-foreground rounded-xl p-4 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.5)] focus:ring-2 focus:ring-cyan-400/30"
+                      style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                    />
+                  </div>
 
-            <div className="flex justify-between">
-              <Button 
-                variant="outline" 
-                className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl"
-                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-                onClick={() => {
-                  // Voice-to-text placeholder
-                  toast({
-                    title: "Voice to text",
-                    description: "Voice-to-text feature coming soon!",
-                  });
-                }}
-              >
-                <Mic className="w-4 h-4 mr-2" />
-                Voice to Text
-              </Button>
-              <Button 
-                variant="default" 
-                onClick={saveEntry}
-                disabled={!journalText.trim()}
-                className="font-retro rounded-xl"
-                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                Save Entry
-              </Button>
+                  <div className="flex justify-between gap-3 pb-4">
+                    <Button 
+                      variant="outline" 
+                      className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl flex-1 sm:flex-none"
+                      style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                      onClick={() => {
+                        // Voice-to-text placeholder
+                        toast({
+                          title: "Voice to text",
+                          description: "Voice-to-text feature coming soon!",
+                        });
+                      }}
+                    >
+                      <Mic className="w-4 h-4 mr-2" />
+                      Voice to Text
+                    </Button>
+                    <Button 
+                      variant="default" 
+                      onClick={saveEntry}
+                      disabled={!journalText.trim()}
+                      className="font-retro rounded-xl flex-1 sm:flex-none"
+                      style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Entry
+                    </Button>
+                  </div>
+                </div>
+              </ScrollArea>
             </div>
           </div>
         )}
