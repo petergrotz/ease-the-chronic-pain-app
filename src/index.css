@@ -43,12 +43,12 @@ All colors MUST be HSL. Premium wellness app aesthetic.
     --eggshell-foreground: 180 20% 15%;
 
     /* Pain tracker colors - Pale mist blue theme */
-    --pain-primary: 200 50% 70%;    /* Soft misty blue */
-    --pain-primary-foreground: 200 60% 15%;
-    --pain-accent: 190 40% 85%;     /* Light blue-grey */
-    --pain-accent-foreground: 190 30% 25%;
-    --pain-bg: 195 30% 96%;         /* Very pale mist blue */
-    --pain-muted: 195 25% 90%;      /* Subtle blue-grey */
+    --pain-primary: 210 45% 65%;    /* Pale blue */
+    --pain-primary-foreground: 210 60% 15%;
+    --pain-accent: 205 35% 80%;     /* Light pale blue */
+    --pain-accent-foreground: 205 30% 25%;
+    --pain-bg: 210 30% 96%;         /* Very pale blue */
+    --pain-muted: 210 25% 88%;      /* Pale blue-grey */
 
     --radius: 12px;                /* Modern rounded corners */
 
@@ -178,26 +178,33 @@ All colors MUST be HSL. Premium wellness app aesthetic.
 
   /* Pain tracker slider styling - Pale blue theme */
   .pain-slider [data-radix-slider-track] {
-    background-color: hsl(210 40% 92%);  /* Very light pale blue */
+    background-color: hsl(210 30% 88%) !important;  /* Pale blue track */
   }
   
   .pain-slider [data-radix-slider-range] {
-    background-color: hsl(var(--pain-primary));  /* Pale blue fill */
+    background-color: hsl(210 45% 65%) !important;  /* Pale blue fill */
   }
   
   .pain-slider [data-radix-slider-thumb] {
-    border-color: hsl(var(--pain-primary));  /* Pale blue border */
-    background-color: hsl(var(--pain-bg));   /* Light blue background */
+    border-color: hsl(210 45% 65%) !important;  /* Pale blue border */
+    background-color: hsl(210 30% 96%) !important;   /* Very light blue background */
     border-width: 2px;
   }
   
   .pain-slider [data-radix-slider-thumb]:focus-visible {
-    box-shadow: 0 0 0 2px hsl(var(--pain-primary));
+    box-shadow: 0 0 0 2px hsl(210 45% 65%) !important;
   }
   
   .pain-slider [data-radix-slider-thumb]:hover {
-    background-color: hsl(var(--pain-primary));
-    border-color: hsl(var(--pain-primary));
+    background-color: hsl(210 45% 65%) !important;
+    border-color: hsl(210 45% 65%) !important;
+  }
+
+  /* Make sure all slider components use pale blue */
+  .pain-slider .react-flow__handle,
+  .pain-slider button {
+    border-color: hsl(210 45% 65%) !important;
+    background-color: hsl(210 30% 96%) !important;
   }
 
   .modern-button:hover {
