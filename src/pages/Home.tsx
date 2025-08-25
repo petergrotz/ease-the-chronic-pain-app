@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/modern-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/modern-card";
 import EnvironmentCarousel from "@/components/EnvironmentCarousel";
+import JournalDialog from "@/components/JournalDialog";
 const easeLogoClouds = "/lovable-uploads/ab156088-a078-4ea1-ab55-6f47188c6e4f.png";
 import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
+import { useState } from "react";
 
 const Home = () => {
+  const [journalOpen, setJournalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
@@ -46,7 +50,7 @@ const Home = () => {
               <Button 
                 variant="default" 
                 className="w-full"
-                onClick={() => console.log('Navigate to Journal')}
+                onClick={() => setJournalOpen(true)}
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 Open Journal
@@ -133,6 +137,11 @@ const Home = () => {
           <div className="mt-4 w-16 h-1 bg-primary rounded-full mx-auto"></div>
         </div>
       </div>
+
+      <JournalDialog 
+        open={journalOpen} 
+        onOpenChange={setJournalOpen} 
+      />
     </div>
   );
 };
