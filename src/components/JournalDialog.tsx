@@ -193,7 +193,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] font-retro bg-card/95 border-2 border-primary/20 text-foreground backdrop-blur-sm rounded-2xl">
+      <DialogContent className="max-w-4xl h-[80vh] font-retro bg-muted/90 border-2 border-primary/20 text-foreground backdrop-blur-sm rounded-2xl">
         <DialogHeader>
           <DialogTitle className="font-retro text-2xl text-center text-primary">
             {view === 'compose' && "Your Micro-Journal"}
