@@ -133,13 +133,13 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
           )}
         </DialogHeader>
 
-        <div className="overflow-y-auto h-full px-6 pb-6">
+        <div className="overflow-y-auto h-full px-8 pb-8">
           {view === 'entry' && (
             <>
               {/* Pain Intensity Slider */}
-              <div className="space-y-3">
+              <div className="space-y-4 mb-8">
                 <label className="text-sm font-medium">Overall, how intense is your pain right now?</label>
-                <div className="px-3">
+                <div className="px-3 py-2">
                   <Slider
                     value={intensity}
                     onValueChange={setIntensity}
@@ -148,26 +148,26 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                     step={1}
                     className="w-full pain-slider"
                   />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <div className="flex justify-between text-xs text-muted-foreground mt-3">
                     <span>0 = No pain</span>
                     <span className="font-medium text-pain-primary">{intensity[0]}</span>
                     <span>10 = Worst imaginable</span>
                   </div>
-                  <div className="text-center text-xs text-muted-foreground mt-1">
+                  <div className="text-center text-xs text-muted-foreground mt-2">
                     5 = Moderate
                   </div>
                 </div>
               </div>
 
               {/* Quality Selection */}
-              <div className="space-y-3">
+              <div className="space-y-4 mb-8">
                 <label className="text-sm font-medium">What type of pain are you feeling right now?</label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {qualityOptions.map((quality) => (
                     <button
                       key={quality}
                       onClick={() => toggleSelection(quality, selectedQualities, setSelectedQualities)}
-                      className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                      className={`px-4 py-2 text-xs rounded-full border transition-colors ${
                         selectedQualities.includes(quality)
                           ? 'bg-pain-primary text-white border-pain-primary shadow-sm'
                           : 'bg-background border-border hover:border-pain-primary hover:bg-pain-primary/5'
@@ -180,7 +180,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               </div>
 
               {/* Impact Assessment */}
-              <div className="space-y-4">
+              <div className="space-y-5 mb-8">
                 <label className="text-sm font-medium">How much has pain interfered with…</label>
                 
                 {[
@@ -188,36 +188,38 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                   { key: 'mood' as const, label: 'Your emotions and mental state' },
                   { key: 'sleep' as const, label: 'Your ability to rest or sleep well' }
                 ].map(({ key, label }) => (
-                  <div key={key} className="space-y-2">
+                  <div key={key} className="space-y-3">
                     <div className="flex justify-between text-xs">
                       <span>{label}</span>
                       <span className="text-pain-primary font-medium">{impact[key]}/5</span>
                     </div>
-                    <Slider
-                      value={[impact[key]]}
-                      onValueChange={([value]) => setImpact(prev => ({ ...prev, [key]: value }))}
-                      max={5}
-                      min={0}
-                      step={1}
-                      className="w-full pain-slider"
-                    />
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>0 = Not at all</span>
-                      <span>5 = Severely</span>
+                    <div className="px-3 py-2">
+                      <Slider
+                        value={[impact[key]]}
+                        onValueChange={([value]) => setImpact(prev => ({ ...prev, [key]: value }))}
+                        max={5}
+                        min={0}
+                        step={1}
+                        className="w-full pain-slider"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                        <span>0 = Not at all</span>
+                        <span>5 = Severely</span>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Context Tags */}
-              <div className="space-y-3">
+              <div className="space-y-4 mb-8">
                 <label className="text-sm font-medium">What factors might be influencing your pain right now?</label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {contextOptions.map((context) => (
                     <button
                       key={context}
                       onClick={() => toggleSelection(context, selectedContext, setSelectedContext)}
-                      className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                      className={`px-4 py-2 text-xs rounded-full border transition-colors ${
                         selectedContext.includes(context)
                           ? 'bg-pain-accent text-pain-accent-foreground border-pain-accent shadow-sm'
                           : 'bg-background border-border hover:border-pain-accent hover:bg-pain-accent/5'
@@ -230,13 +232,13 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               </div>
 
               {/* Notes */}
-              <div className="space-y-3">
+              <div className="space-y-4 mb-8">
                 <label className="text-sm font-medium">Optional: Add a quick note</label>
                 <Textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="e.g., what made today easier or harder?"
-                  className="min-h-[80px] resize-none"
+                  className="min-h-[100px] resize-none"
                   maxLength={200}
                 />
               </div>
@@ -261,13 +263,13 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               </div>
 
               {/* What Helped Selection */}
-              <div className="space-y-3">
-                <div className="flex flex-wrap gap-2">
+              <div className="space-y-4">
+                <div className="flex flex-wrap gap-3">
                   {helpedOptions.map((helped) => (
                     <button
                       key={helped}
                       onClick={() => toggleSelection(helped, selectedHelped, setSelectedHelped)}
-                      className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                      className={`px-4 py-2 text-xs rounded-full border transition-colors ${
                         selectedHelped.includes(helped)
                           ? 'bg-pain-primary text-white border-pain-primary shadow-sm'
                           : 'bg-background border-border hover:border-pain-primary hover:bg-pain-primary/5'
@@ -279,7 +281,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                 </div>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-4 mt-8">
                 <Button variant="outline" onClick={() => { resetForm(); setView('entry'); }} className="flex-1">
                   Skip
                 </Button>
@@ -353,7 +355,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
             <Button 
               variant="outline" 
               onClick={() => setView('history')} 
-              className="w-full"
+              className="w-full mt-6"
             >
               View History ({entries.length} entries)
             </Button>
