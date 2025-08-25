@@ -193,7 +193,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] font-retro bg-muted/90 border-2 border-primary/20 text-foreground backdrop-blur-sm rounded-2xl">
+      <DialogContent className="max-w-4xl h-[80vh] font-retro border-2 border-primary/20 text-foreground backdrop-blur-sm rounded-2xl" style={{backgroundColor: 'hsl(var(--journal-bg))'}}>
         <DialogHeader>
           <DialogTitle className="font-retro text-2xl text-center text-primary">
             {view === 'compose' && "Your Micro-Journal"}
@@ -207,7 +207,8 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="outline" 
                 onClick={() => setView('history')}
-                className="font-retro text-foreground hover:text-foreground border-primary/30 hover:bg-primary/10"
+                className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl"
+                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
               >
                 View Journal
               </Button>
@@ -246,14 +247,16 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 value={journalText}
                 onChange={(e) => setJournalText(e.target.value)}
                 placeholder="Write a few lines. Anything is welcome."
-                className="h-full resize-none font-retro bg-secondary/20 border-border text-foreground placeholder:text-muted-foreground rounded-xl p-4 focus:bg-secondary/30 focus:border-primary/40 transition-all"
+                className="h-full resize-none font-retro border-border placeholder:text-muted-foreground rounded-xl p-4 focus:border-primary/40 transition-all"
+                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
               />
             </div>
 
             <div className="flex justify-between">
               <Button 
                 variant="outline" 
-                className="font-retro text-foreground hover:text-foreground border-primary/30 hover:bg-primary/10 rounded-xl"
+                className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl"
+                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
                 onClick={() => {
                   // Voice-to-text placeholder
                   toast({
@@ -269,7 +272,8 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 variant="default" 
                 onClick={saveEntry}
                 disabled={!journalText.trim()}
-                className="font-retro bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
+                className="font-retro rounded-xl"
+                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
               >
                 <Save className="w-4 h-4 mr-2" />
                 Save Entry
@@ -284,7 +288,8 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="default" 
                 onClick={() => setView('compose')}
-                className="font-retro bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
+                className="font-retro rounded-xl"
+                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 Start Journaling

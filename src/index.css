@@ -37,6 +37,11 @@ All colors MUST be HSL. Premium wellness app aesthetic.
     --input: 185 20% 93%;          /* Light mint inputs */
     --ring: 174 45% 65%;           /* Seaglass focus rings */
 
+    /* Custom journal colors */
+    --journal-bg: 174 35% 75%;     /* Darker seafoam */
+    --eggshell: 60 10% 96%;        /* Warm eggshell */
+    --eggshell-foreground: 180 20% 15%;
+
     --radius: 12px;                /* Modern rounded corners */
 
     /* Seaglass Gradients */
