@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/modern-button";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ChartContainer } from "@/components/ui/chart";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { ArrowLeft, Save, BarChart3, Calendar, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -228,35 +230,90 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
             </p>
           </div>
 
-          {/* Pain Timeline */}
+          {/* Pain Timeline Graph */}
           <div className="p-4 border rounded-lg">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-pain-primary" />
               <h3 className="font-medium">Pain Timeline</h3>
             </div>
-            <div className="space-y-2">
-              {entries.slice(0, 7).map((entry) => (
-                <div key={entry.id} className="flex items-center justify-between p-2 bg-muted/30 rounded">
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(entry.date).toLocaleDateString()}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <div className="flex gap-1">
-                      {Array.from({ length: 10 }, (_, i) => (
-                        <div
-                          key={i}
-                          className={`w-2 h-4 rounded ${
-                            i < entry.intensity ? 'bg-pain-primary' : 'bg-pain-muted'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs font-medium text-pain-primary">
-                      {entry.intensity}/10
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <div className="h-48">
+              <ChartContainer
+                config={{
+                  intensity: {
+                    label: "Pain Intensity",
+                    color: "hsl(var(--pain-primary))",
+                  },
+                }}
+                className="h-full w-full"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={entries
+                      .slice(0, 14)
+                      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                      .map((entry) => ({
+                        date: new Date(entry.date).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric' 
+                        }),
+                        intensity: entry.intensity,
+                        fullDate: new Date(entry.date).toLocaleDateString(),
+                      }))}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                    <XAxis 
+                      dataKey="date" 
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis 
+                      domain={[0, 10]}
+                      fontSize={12}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="rounded-lg border bg-background p-2 shadow-sm">
+                              <div className="grid grid-cols-2 gap-2">
+                                <div className="flex flex-col">
+                                  <span className="text-xs text-muted-foreground">
+                                    Date
+                                  </span>
+                                  <span className="text-sm font-bold">
+                                    {payload[0]?.payload?.fullDate}
+                                  </span>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs text-muted-foreground">
+                                    Pain Level
+                                  </span>
+                                  <span className="text-sm font-bold text-pain-primary">
+                                    {payload[0]?.value}/10
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                        return null
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="intensity"
+                      stroke="hsl(var(--pain-primary))"
+                      strokeWidth={2}
+                      dot={{ fill: "hsl(var(--pain-primary))", strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: "hsl(var(--pain-primary))", strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </div>
 
