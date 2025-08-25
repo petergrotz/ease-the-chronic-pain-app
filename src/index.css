@@ -176,44 +176,32 @@ All colors MUST be HSL. Premium wellness app aesthetic.
     background: transparent;
   }
 
-  /* Pain tracker slider styling - Pale blue theme - AGGRESSIVE OVERRIDE */
-  .pain-slider * {
-    --primary: 210 45% 65% !important;  /* Force pale blue as primary */
+  /* Pain tracker slider styling - FORCE PALE BLUE */
+  .pain-slider {
+    --primary: 210 45% 65% !important;
+    --primary-foreground: 210 60% 15% !important;
   }
   
-  .pain-slider .absolute.h-full,
+  /* Override Radix slider internal classes directly */
+  .pain-slider [data-radix-slider-track] {
+    background-color: hsl(210 25% 88%) !important;
+  }
+  
   .pain-slider [data-radix-slider-range] {
-    background: hsl(210 45% 65%) !important;  /* Direct pale blue override */
     background-color: hsl(210 45% 65%) !important;
   }
   
-  .pain-slider .border-primary,
   .pain-slider [data-radix-slider-thumb] {
-    border-color: hsl(210 45% 65%) !important;  /* Pale blue border */
-    background-color: hsl(210 30% 96%) !important;
-    border-width: 2px;
-  }
-  
-  .pain-slider .bg-secondary,
-  .pain-slider [data-radix-slider-track] {
-    background: hsl(210 25% 88%) !important;  /* Pale blue track */
-    background-color: hsl(210 25% 88%) !important;
-  }
-
-  .pain-slider [data-radix-slider-thumb]:focus-visible {
-    box-shadow: 0 0 0 2px hsl(210 45% 65%) !important;
+    background-color: white !important;
+    border: 2px solid hsl(210 45% 65%) !important;
   }
   
   .pain-slider [data-radix-slider-thumb]:hover {
     background-color: hsl(210 45% 65%) !important;
-    border-color: hsl(210 45% 65%) !important;
   }
-
-  /* Make sure all slider components use pale blue */
-  .pain-slider .react-flow__handle,
-  .pain-slider button {
-    border-color: hsl(210 45% 65%) !important;
-    background-color: hsl(210 30% 96%) !important;
+  
+  .pain-slider [data-radix-slider-thumb]:focus-visible {
+    box-shadow: 0 0 0 2px hsl(210 45% 65%) !important;
   }
 
   .modern-button:hover {

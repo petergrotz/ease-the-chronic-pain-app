@@ -133,7 +133,6 @@ const EnvironmentCarousel = () => {
                        className="w-full text-sm"
                        onClick={() => handleStartSession(environment.id)}
                      >
-                      <Play className="w-4 h-4 mr-2" />
                       Start Session
                     </Button>
                   </div>
