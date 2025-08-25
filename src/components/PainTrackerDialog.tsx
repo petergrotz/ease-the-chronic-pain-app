@@ -127,7 +127,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
             {view === 'history' && "Your Pain Timeline"}
           </DialogTitle>
           {view === 'entry' && (
-            <p className="text-sm text-muted-foreground text-center mt-2 px-4">
+            <p className="text-sm text-muted-foreground text-center mt-2 px-4 mb-6">
               Log a quick snapshot of your pain today. A few taps help you notice patterns over time.
             </p>
           )}
@@ -152,9 +152,6 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                     <span>0 = No pain</span>
                     <span className="font-medium text-pain-primary">{intensity[0]}</span>
                     <span>10 = Worst imaginable</span>
-                  </div>
-                  <div className="text-center text-xs text-muted-foreground mt-2">
-                    5 = Moderate
                   </div>
                 </div>
               </div>
