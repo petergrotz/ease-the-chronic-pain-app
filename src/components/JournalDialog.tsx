@@ -3,7 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/modern-button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { BookOpen, ArrowLeft, Save, Mic } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BookOpen, ArrowLeft, Save, Mic, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface JournalEntry {
@@ -128,8 +129,7 @@ interface JournalDialogProps {
 }
 
 export default function JournalDialog({ open, onOpenChange }: JournalDialogProps) {
-  const [view, setView] = useState<'prompts' | 'compose' | 'history'>('prompts');
-  const [selectedPrompt, setSelectedPrompt] = useState<string>("");
+  const [view, setView] = useState<'compose' | 'history'>('compose');
   const [journalText, setJournalText] = useState<string>("");
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
@@ -152,7 +152,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
     const newEntry: JournalEntry = {
       id: Date.now().toString(),
       timestamp: new Date(),
-      prompt_text: selectedPrompt,
+      prompt_text: "", // No longer tracking specific prompts since they're inline
       body: journalText,
       emoji: CALMING_EMOJIS[entries.length % CALMING_EMOJIS.length]
     };
@@ -170,9 +170,12 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
     setView('history');
   };
 
-  const selectPrompt = (prompt: string) => {
-    setSelectedPrompt(prompt);
-    setView('compose');
+  const addPromptToText = (prompt: string) => {
+    if (journalText.trim()) {
+      setJournalText(prompt + "\n\n" + journalText);
+    } else {
+      setJournalText(prompt + "\n\n");
+    }
   };
 
   const formatDate = (date: Date) => {
@@ -193,55 +196,14 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
       <DialogContent className="max-w-4xl h-[80vh] font-tech bg-black/90 border-2 border-primary/30 text-white">
         <DialogHeader>
           <DialogTitle className="font-tech text-2xl text-center text-primary">
-            {view === 'prompts' && "Choose Your Prompt"}
             {view === 'compose' && "Your Micro-Journal"}
             {view === 'history' && "Your Small Notes of Care"}
           </DialogTitle>
         </DialogHeader>
 
-        {view === 'prompts' && (
-          <div className="flex flex-col h-full">
-            <div className="flex justify-center mb-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setView('history')}
-                className="font-tech"
-              >
-                View Journal
-              </Button>
-            </div>
-            <ScrollArea className="flex-1">
-              <div className="grid grid-cols-1 gap-2 p-4">
-                {entries.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p className="font-tech text-lg">First step counts. Pick a prompt to begin.</p>
-                  </div>
-                )}
-                {MICRO_PROMPTS.map((prompt, index) => (
-                  <button
-                    key={index}
-                    onClick={() => selectPrompt(prompt)}
-                    className="p-4 bg-card/50 border border-border/50 hover:bg-card/70 hover:border-primary/50 transition-all text-left font-tech text-sm rounded-none"
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
-            </ScrollArea>
-          </div>
-        )}
-
         {view === 'compose' && (
           <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between mb-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setView('prompts')}
-                className="font-tech"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Prompts
-              </Button>
+            <div className="flex justify-center mb-6">
               <Button 
                 variant="outline" 
                 onClick={() => setView('history')}
@@ -250,9 +212,33 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 View Journal
               </Button>
             </div>
-            
-            <div className="bg-primary/10 p-4 border border-primary/30 mb-4 rounded-none">
-              <p className="font-tech text-lg text-primary">{selectedPrompt}</p>
+
+            <div className="mb-6 text-center">
+              <p className="font-tech text-sm text-muted-foreground leading-relaxed">
+                This is your journaling space — a gentle place to reflect on your body, your pain, and the small moments of ease. Choose a prompt below, or just start writing what's on your mind.
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <Select onValueChange={addPromptToText}>
+                <SelectTrigger className="w-full font-tech bg-background/50 border-border/50 text-white rounded-none">
+                  <SelectValue placeholder="Inspiration to get you started..." />
+                  <ChevronDown className="w-4 h-4" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px] bg-background border-border/50 rounded-none z-50">
+                  <div className="bg-background">
+                    {MICRO_PROMPTS.map((prompt, index) => (
+                      <SelectItem 
+                        key={index} 
+                        value={prompt}
+                        className="font-tech text-sm py-3 px-4 hover:bg-card/70 focus:bg-card/70 text-white"
+                      >
+                        {prompt}
+                      </SelectItem>
+                    ))}
+                  </div>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex-1 mb-4">
@@ -297,7 +283,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
             <div className="flex justify-center mb-4">
               <Button 
                 variant="default" 
-                onClick={() => setView('prompts')}
+                onClick={() => setView('compose')}
                 className="font-tech"
               >
                 <BookOpen className="w-4 h-4 mr-2" />
@@ -326,9 +312,11 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                         </div>
                       </div>
                       
-                      <p className="font-tech text-sm text-muted-foreground mb-2">
-                        {entry.prompt_text}
-                      </p>
+                      {entry.prompt_text && (
+                        <p className="font-tech text-sm text-muted-foreground mb-2">
+                          {entry.prompt_text}
+                        </p>
+                      )}
                       
                       <div className="font-tech text-sm">
                         {expandedEntry === entry.id ? (
