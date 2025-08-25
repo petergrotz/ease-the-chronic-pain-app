@@ -316,7 +316,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           <span className="text-xl">{entry.emoji}</span>
-                          <span className="font-retro text-primary">
+                          <span className="font-retro text-white">
                             {formatDate(entry.timestamp)}
                           </span>
                         </div>
