@@ -195,15 +195,20 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[80vh] font-retro border-2 border-primary/20 text-foreground backdrop-blur-sm rounded-2xl" style={{backgroundColor: 'hsl(var(--journal-bg))'}}>
         <DialogHeader>
-          <DialogTitle className="font-retro text-2xl text-center text-primary">
-            {view === 'compose' && "Your Micro-Journal"}
+          <DialogTitle className="font-retro text-2xl text-center text-white flex items-center justify-center gap-2">
+            {view === 'compose' && (
+              <>
+                <span>🌿</span>
+                <span>Your Micro-Journal</span>
+              </>
+            )}
             {view === 'history' && "Your Small Notes of Care"}
           </DialogTitle>
         </DialogHeader>
 
         {view === 'compose' && (
           <div className="flex flex-col h-full">
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4">
               <Button 
                 variant="outline" 
                 onClick={() => setView('history')}
@@ -214,7 +219,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               </Button>
             </div>
 
-            <div className="mb-6 text-center">
+            <div className="mb-4 text-center">
               <p className="font-retro text-sm text-muted-foreground leading-relaxed">
                 This is your journaling space — a gentle place to reflect on your body, your pain, and the small moments of ease. Choose a prompt below, or just start writing what's on your mind.
               </p>
@@ -242,12 +247,12 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               </Select>
             </div>
 
-            <div className="flex-1 mb-4">
+            <div className="flex-1 mb-4 min-h-[300px]">
               <Textarea
                 value={journalText}
                 onChange={(e) => setJournalText(e.target.value)}
                 placeholder="Write a few lines. Anything is welcome."
-                className="h-full resize-none font-retro border-border placeholder:text-muted-foreground rounded-xl p-4 focus:border-primary/40 transition-all"
+                className="h-full resize-none font-retro border-border placeholder:text-muted-foreground rounded-xl p-4 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.5)] focus:ring-2 focus:ring-cyan-400/30"
                 style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
               />
             </div>
