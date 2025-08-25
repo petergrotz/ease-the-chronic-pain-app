@@ -110,9 +110,9 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg mx-auto pain-tracker-dialog">
+      <DialogContent className="max-w-4xl h-[80vh] font-retro border-2 border-pain-primary/20 text-foreground backdrop-blur-sm rounded-2xl" style={{backgroundColor: 'hsl(var(--pain-bg))'}}>
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-3 text-xl font-pokemon">
+          <DialogTitle className="font-retro text-2xl text-center flex items-center justify-center gap-3">
             {view === 'history' && (
               <button
                 onClick={() => setView('entry')}
@@ -128,7 +128,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="overflow-y-auto h-full px-6 pb-6">
           {view === 'entry' && (
             <>
               {/* Pain Intensity Slider */}
@@ -141,7 +141,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                     max={10}
                     min={0}
                     step={1}
-                    className="w-full"
+                    className="w-full pain-slider"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground mt-1">
                     <span>0 - No pain</span>
@@ -187,7 +187,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                       max={5}
                       min={1}
                       step={1}
-                      className="w-full"
+                      className="w-full pain-slider"
                     />
                   </div>
                 ))}
