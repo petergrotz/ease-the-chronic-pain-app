@@ -211,7 +211,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 <span>Your Micro-Journal</span>
               </>
             )}
-            {view === 'history' && "your journal entries"}
+            {view === 'history' && "Your Journal"}
           </DialogTitle>
         </DialogHeader>
 
