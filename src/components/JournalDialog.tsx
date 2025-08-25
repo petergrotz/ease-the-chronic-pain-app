@@ -193,9 +193,9 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] font-tech bg-black/70 border-2 border-primary/30 text-white">
+      <DialogContent className="max-w-4xl h-[80vh] font-retro bg-card/95 border-2 border-primary/20 text-foreground backdrop-blur-sm rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="font-tech text-2xl text-center text-primary">
+          <DialogTitle className="font-retro text-2xl text-center text-primary">
             {view === 'compose' && "Your Micro-Journal"}
             {view === 'history' && "Your Small Notes of Care"}
           </DialogTitle>
@@ -207,31 +207,31 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="outline" 
                 onClick={() => setView('history')}
-                className="font-tech text-black hover:text-black"
+                className="font-retro text-foreground hover:text-foreground border-primary/30 hover:bg-primary/10"
               >
                 View Journal
               </Button>
             </div>
 
             <div className="mb-6 text-center">
-              <p className="font-tech text-sm text-muted-foreground leading-relaxed">
+              <p className="font-retro text-sm text-muted-foreground leading-relaxed">
                 This is your journaling space — a gentle place to reflect on your body, your pain, and the small moments of ease. Choose a prompt below, or just start writing what's on your mind.
               </p>
             </div>
 
             <div className="mb-4">
               <Select onValueChange={addPromptToText}>
-                <SelectTrigger className="w-full font-tech bg-background/50 border-border/50 text-white rounded-none">
+                <SelectTrigger className="w-full font-retro bg-secondary/30 border-border text-foreground rounded-xl">
                   <SelectValue placeholder="Inspiration to get you started..." />
                   <ChevronDown className="w-4 h-4" />
                 </SelectTrigger>
-                <SelectContent className="max-h-[300px] bg-background border-border/50 rounded-none z-50">
-                  <div className="bg-background">
+                <SelectContent className="max-h-[300px] bg-card border-border rounded-xl z-50">
+                  <div className="bg-card">
                     {MICRO_PROMPTS.map((prompt, index) => (
                       <SelectItem 
                         key={index} 
                         value={prompt}
-                        className="font-tech text-sm py-3 px-4 hover:bg-card/70 focus:bg-card/70 text-white"
+                        className="font-retro text-sm py-3 px-4 hover:bg-secondary/20 focus:bg-secondary/20 text-foreground"
                       >
                         {prompt}
                       </SelectItem>
@@ -246,14 +246,14 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 value={journalText}
                 onChange={(e) => setJournalText(e.target.value)}
                 placeholder="Write a few lines. Anything is welcome."
-                className="h-full resize-none font-tech bg-background/50 border-border/50 text-white placeholder:text-white/70"
+                className="h-full resize-none font-retro bg-secondary/20 border-border text-foreground placeholder:text-muted-foreground rounded-xl p-4 focus:bg-secondary/30 focus:border-primary/40 transition-all"
               />
             </div>
 
             <div className="flex justify-between">
               <Button 
                 variant="outline" 
-                className="font-tech text-black hover:text-black"
+                className="font-retro text-foreground hover:text-foreground border-primary/30 hover:bg-primary/10 rounded-xl"
                 onClick={() => {
                   // Voice-to-text placeholder
                   toast({
@@ -269,7 +269,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                 variant="default" 
                 onClick={saveEntry}
                 disabled={!journalText.trim()}
-                className="font-tech text-black hover:text-black"
+                className="font-retro bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Save Entry
@@ -284,7 +284,7 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               <Button 
                 variant="default" 
                 onClick={() => setView('compose')}
-                className="font-tech text-black hover:text-black"
+                className="font-retro bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl"
               >
                 <BookOpen className="w-4 h-4 mr-2" />
                 Start Journaling
@@ -294,31 +294,31 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
             <ScrollArea className="flex-1">
               {entries.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  <p className="font-tech text-lg">First step counts. Pick a prompt to begin.</p>
+                  <p className="font-retro text-lg">First step counts. Pick a prompt to begin.</p>
                 </div>
               ) : (
                 <div className="space-y-4 p-4">
                   {entries.map((entry) => (
                     <div 
                       key={entry.id}
-                      className="bg-card/50 border border-border/50 p-4 rounded-none"
+                      className="bg-secondary/20 border border-border p-4 rounded-xl"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           <span className="text-xl">{entry.emoji}</span>
-                          <span className="font-tech text-primary">
+                          <span className="font-retro text-primary">
                             {formatDate(entry.timestamp)}
                           </span>
                         </div>
                       </div>
                       
                       {entry.prompt_text && (
-                        <p className="font-tech text-sm text-muted-foreground mb-2">
+                        <p className="font-retro text-sm text-muted-foreground mb-2">
                           {entry.prompt_text}
                         </p>
                       )}
                       
-                      <div className="font-tech text-sm">
+                      <div className="font-retro text-sm">
                         {expandedEntry === entry.id ? (
                           <div>
                             <p className="whitespace-pre-wrap">{entry.body}</p>
