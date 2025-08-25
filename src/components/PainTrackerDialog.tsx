@@ -39,14 +39,15 @@ const qualityOptions = [
 ];
 
 const contextOptions = [
-  "posture", "stress", "weather", "medication", 
-  "movement", "hydration", "rest", "screen time", 
-  "outside", "inside"
+  "My posture or body position", "Stress or emotional strain", "Weather or temperature changes", "Recent medication use", 
+  "Recent movement or exercise", "How much water I've had", "Whether I rested or napped", "Time spent looking at screens", 
+  "Time spent outside", "Time spent indoors"
 ];
 
 const helpedOptions = [
-  "heat", "stretching", "breathing", "walk", 
-  "rest", "hydration", "medication", "talking with someone"
+  "Heat", "Stretching", "Breathing", "Walking", 
+  "Resting", "Drinking water", "Medication", "Talking with someone",
+  "Music", "Distraction"
 ];
 
 const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
@@ -55,7 +56,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
   const [selectedQualities, setSelectedQualities] = useState<string[]>([]);
   const [selectedContext, setSelectedContext] = useState<string[]>([]);
   const [selectedHelped, setSelectedHelped] = useState<string[]>([]);
-  const [impact, setImpact] = useState({ activity: 3, mood: 3, sleep: 3 });
+  const [impact, setImpact] = useState({ activity: 0, mood: 0, sleep: 0 });
   const [notes, setNotes] = useState("");
   const [entries, setEntries] = useState<PainEntry[]>([]);
   const { toast } = useToast();
@@ -65,7 +66,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
     setSelectedQualities([]);
     setSelectedContext([]);
     setSelectedHelped([]);
-    setImpact({ activity: 3, mood: 3, sleep: 3 });
+    setImpact({ activity: 0, mood: 0, sleep: 0 });
     setNotes("");
   };
 
@@ -84,7 +85,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
     setEntries(prev => [entry, ...prev]);
     setView('post-save');
     toast({
-      title: "Saved. Thank you for listening to your body.",
+      title: "Saved. Thank you for checking in with your body.",
       description: "Your pain log has been recorded.",
     });
   };
@@ -121,11 +122,15 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                 <ArrowLeft className="w-5 h-5" />
               </button>
             )}
-            <Heart className="w-6 h-6 text-pain-primary" />
-            {view === 'entry' && "Track your trends and symptoms"}
-            {view === 'post-save' && "What helped today?"}
+            {view === 'entry' && "Track your Trends and Symptoms"}
+            {view === 'post-save' && "What helped ease your pain today?"}
             {view === 'history' && "Your Pain Timeline"}
           </DialogTitle>
+          {view === 'entry' && (
+            <p className="text-sm text-muted-foreground text-center mt-2 px-4">
+              Log a quick snapshot of your pain today. A few taps help you notice patterns over time.
+            </p>
+          )}
         </DialogHeader>
 
         <div className="overflow-y-auto h-full px-6 pb-6">
@@ -133,7 +138,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
             <>
               {/* Pain Intensity Slider */}
               <div className="space-y-3">
-                <label className="text-sm font-medium">How is your pain right now?</label>
+                <label className="text-sm font-medium">Overall, how intense is your pain right now?</label>
                 <div className="px-3">
                   <Slider
                     value={intensity}
@@ -144,16 +149,19 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                     className="w-full pain-slider"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <span>0 - No pain</span>
+                    <span>0 = No pain</span>
                     <span className="font-medium text-pain-primary">{intensity[0]}</span>
-                    <span>10 - Worst pain</span>
+                    <span>10 = Worst imaginable</span>
+                  </div>
+                  <div className="text-center text-xs text-muted-foreground mt-1">
+                    5 = Moderate
                   </div>
                 </div>
               </div>
 
               {/* Quality Selection */}
               <div className="space-y-3">
-                <label className="text-sm font-medium">What does it feel like?</label>
+                <label className="text-sm font-medium">What type of pain are you feeling right now?</label>
                 <div className="flex flex-wrap gap-2">
                   {qualityOptions.map((quality) => (
                     <button
@@ -161,8 +169,8 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                       onClick={() => toggleSelection(quality, selectedQualities, setSelectedQualities)}
                       className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
                         selectedQualities.includes(quality)
-                          ? 'bg-pain-primary text-white border-pain-primary'
-                          : 'bg-background border-border hover:border-pain-primary'
+                          ? 'bg-pain-primary text-white border-pain-primary shadow-sm'
+                          : 'bg-background border-border hover:border-pain-primary hover:bg-pain-primary/5'
                       }`}
                     >
                       {quality}
@@ -173,29 +181,37 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
 
               {/* Impact Assessment */}
               <div className="space-y-4">
-                <label className="text-sm font-medium">How has pain affected you today?</label>
+                <label className="text-sm font-medium">How much has pain interfered with…</label>
                 
-                {(['activity', 'mood', 'sleep'] as const).map((category) => (
-                  <div key={category} className="space-y-2">
+                {[
+                  { key: 'activity' as const, label: 'Your ability to do daily tasks' },
+                  { key: 'mood' as const, label: 'Your emotions and mental state' },
+                  { key: 'sleep' as const, label: 'Your ability to rest or sleep well' }
+                ].map(({ key, label }) => (
+                  <div key={key} className="space-y-2">
                     <div className="flex justify-between text-xs">
-                      <span className="capitalize">{category}</span>
-                      <span className="text-pain-primary font-medium">{impact[category]}/5</span>
+                      <span>{label}</span>
+                      <span className="text-pain-primary font-medium">{impact[key]}/5</span>
                     </div>
                     <Slider
-                      value={[impact[category]]}
-                      onValueChange={([value]) => setImpact(prev => ({ ...prev, [category]: value }))}
+                      value={[impact[key]]}
+                      onValueChange={([value]) => setImpact(prev => ({ ...prev, [key]: value }))}
                       max={5}
-                      min={1}
+                      min={0}
                       step={1}
                       className="w-full pain-slider"
                     />
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>0 = Not at all</span>
+                      <span>5 = Severely</span>
+                    </div>
                   </div>
                 ))}
               </div>
 
               {/* Context Tags */}
               <div className="space-y-3">
-                <label className="text-sm font-medium">What's happening around you?</label>
+                <label className="text-sm font-medium">What factors might be influencing your pain right now?</label>
                 <div className="flex flex-wrap gap-2">
                   {contextOptions.map((context) => (
                     <button
@@ -203,8 +219,8 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                       onClick={() => toggleSelection(context, selectedContext, setSelectedContext)}
                       className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
                         selectedContext.includes(context)
-                          ? 'bg-pain-accent text-pain-accent-foreground border-pain-accent'
-                          : 'bg-background border-border hover:border-pain-accent'
+                          ? 'bg-pain-accent text-pain-accent-foreground border-pain-accent shadow-sm'
+                          : 'bg-background border-border hover:border-pain-accent hover:bg-pain-accent/5'
                       }`}
                     >
                       {context}
@@ -215,11 +231,11 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
 
               {/* Notes */}
               <div className="space-y-3">
-                <label className="text-sm font-medium">Add a few words if you'd like</label>
+                <label className="text-sm font-medium">Optional: Add a quick note</label>
                 <Textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="How are you feeling? What's on your mind?"
+                  placeholder="e.g., what made today easier or harder?"
                   className="min-h-[80px] resize-none"
                   maxLength={200}
                 />
@@ -237,16 +253,15 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
             <>
               <div className="text-center py-6">
                 <div className="w-16 h-16 bg-pain-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-8 h-8 text-pain-primary" />
+                  <Save className="w-8 h-8 text-pain-primary" />
                 </div>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Your pain log has been saved. What helped you today?
+                  Your pain log has been saved. What helped ease your pain today?
                 </p>
               </div>
 
               {/* What Helped Selection */}
               <div className="space-y-3">
-                <label className="text-sm font-medium">What helped? (Optional)</label>
                 <div className="flex flex-wrap gap-2">
                   {helpedOptions.map((helped) => (
                     <button
@@ -254,8 +269,8 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
                       onClick={() => toggleSelection(helped, selectedHelped, setSelectedHelped)}
                       className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
                         selectedHelped.includes(helped)
-                          ? 'bg-pain-primary text-white border-pain-primary'
-                          : 'bg-background border-border hover:border-pain-primary'
+                          ? 'bg-pain-primary text-white border-pain-primary shadow-sm'
+                          : 'bg-background border-border hover:border-pain-primary hover:bg-pain-primary/5'
                       }`}
                     >
                       {helped}
@@ -280,39 +295,55 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               <div className="space-y-4">
                 {entries.length === 0 ? (
                   <div className="text-center py-12">
-                    <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">
+                    <div className="w-12 h-12 bg-pain-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Save className="w-6 h-6 text-pain-primary" />
+                    </div>
+                    <p className="text-muted-foreground text-sm">
                       Your first check-in creates your pain timeline.
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Your pain logs stay on your device unless you choose to export them.
                     </p>
                   </div>
                 ) : (
-                  entries.map((entry) => (
-                    <div key={entry.id} className="p-4 border rounded-lg space-y-2">
-                      <div className="flex justify-between items-start">
-                        <div className="text-sm text-muted-foreground">
-                          {new Date(entry.date).toLocaleDateString()} • Pain: {entry.intensity}/10
-                        </div>
-                      </div>
-                      {entry.quality.length > 0 && (
-                        <div className="text-xs">
-                          <span className="font-medium">Quality:</span> {entry.quality.join(', ')}
-                        </div>
-                      )}
-                      {entry.context.length > 0 && (
-                        <div className="text-xs">
-                          <span className="font-medium">Context:</span> {entry.context.join(', ')}
-                        </div>
-                      )}
-                      {entry.helped && entry.helped.length > 0 && (
-                        <div className="text-xs">
-                          <span className="font-medium">What helped:</span> {entry.helped.join(', ')}
-                        </div>
-                      )}
-                      {entry.notes && (
-                        <div className="text-xs italic">"{entry.notes}"</div>
-                      )}
+                  <>
+                    <div className="text-xs text-muted-foreground text-center mb-4 p-2 bg-pain-primary/5 rounded-lg">
+                      Your pain logs stay on your device unless you choose to export them.
                     </div>
-                  ))
+                    {entries.map((entry) => {
+                      const emojis = ["🌿", "🌊", "🌙", "☁️", "✨"];
+                      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                      return (
+                        <div key={entry.id} className="p-4 border rounded-lg space-y-2">
+                          <div className="flex justify-between items-start">
+                            <div className="text-sm text-muted-foreground flex items-center gap-2">
+                              <span>{emoji}</span>
+                              <span>{new Date(entry.date).toLocaleDateString()}</span>
+                              <span>• Pain: {entry.intensity}/10</span>
+                            </div>
+                          </div>
+                          {entry.quality.length > 0 && (
+                            <div className="text-xs">
+                              <span className="font-medium">Type:</span> {entry.quality.join(', ')}
+                            </div>
+                          )}
+                          {entry.context.length > 0 && (
+                            <div className="text-xs">
+                              <span className="font-medium">Factors:</span> {entry.context.join(', ')}
+                            </div>
+                          )}
+                          {entry.helped && entry.helped.length > 0 && (
+                            <div className="text-xs">
+                              <span className="font-medium">What helped:</span> {entry.helped.join(', ')}
+                            </div>
+                          )}
+                          {entry.notes && (
+                            <div className="text-xs italic">"{entry.notes}"</div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </>
                 )}
               </div>
             </ScrollArea>
