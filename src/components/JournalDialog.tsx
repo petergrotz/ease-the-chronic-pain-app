@@ -310,63 +310,65 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
               </Button>
             </div>
 
-            <ScrollArea className="flex-1">
-              {entries.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p className="font-retro text-lg">First step counts. Pick a prompt to begin.</p>
-                </div>
-              ) : (
-                <div className="space-y-4 p-4">
-                  {entries.map((entry) => (
-                    <div 
-                      key={entry.id}
-                      className="bg-secondary/20 border border-border p-4 rounded-xl cursor-pointer hover:bg-secondary/30 transition-colors"
-                      onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xl">{entry.emoji}</span>
-                          <div className="flex flex-col">
-                            <span className="font-retro text-white text-sm">
-                              {formatDate(entry.timestamp)}
-                            </span>
-                            <span className="font-retro text-white/70 text-xs">
-                              {formatTime(entry.timestamp)}
-                            </span>
+            <div className="flex-1 min-h-0">
+              <ScrollArea className="h-full max-h-[500px]">
+                {entries.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p className="font-retro text-lg">First step counts. Pick a prompt to begin.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4 p-4">
+                    {entries.map((entry) => (
+                      <div 
+                        key={entry.id}
+                        className="bg-secondary/20 border border-border p-4 rounded-xl cursor-pointer hover:bg-secondary/30 transition-colors"
+                        onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xl">{entry.emoji}</span>
+                            <div className="flex flex-col">
+                              <span className="font-retro text-white text-sm">
+                                {formatDate(entry.timestamp)}
+                              </span>
+                              <span className="font-retro text-white/70 text-xs">
+                                {formatTime(entry.timestamp)}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      
-                      {entry.prompt_text && (
-                        <p className="font-retro text-sm text-muted-foreground mb-2">
-                          {entry.prompt_text}
-                        </p>
-                      )}
-                      
-                      <div className="font-retro text-sm text-white">
-                        {expandedEntry === entry.id ? (
-                          <div>
-                            <p className="whitespace-pre-wrap">{entry.body}</p>
-                            <p className="text-primary hover:underline mt-2 text-xs">
-                              Click to collapse
-                            </p>
-                          </div>
-                        ) : (
-                          <div>
-                            <p className="whitespace-pre-wrap">{truncateToLines(entry.body)}</p>
-                            {entry.body.split('\n').length > 3 && (
-                              <p className="text-primary hover:underline mt-2 text-xs">
-                                Click to expand
-                              </p>
-                            )}
-                          </div>
+                        
+                        {entry.prompt_text && (
+                          <p className="font-retro text-sm text-muted-foreground mb-2">
+                            {entry.prompt_text}
+                          </p>
                         )}
+                        
+                        <div className="font-retro text-sm text-white">
+                          {expandedEntry === entry.id ? (
+                            <div>
+                              <p className="whitespace-pre-wrap">{entry.body}</p>
+                              <p className="text-primary hover:underline mt-2 text-xs">
+                                Click to collapse
+                              </p>
+                            </div>
+                          ) : (
+                            <div>
+                              <p className="whitespace-pre-wrap">{truncateToLines(entry.body)}</p>
+                              {entry.body.split('\n').length > 3 && (
+                                <p className="text-primary hover:underline mt-2 text-xs">
+                                  Click to expand
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </div>
           </div>
         )}
       </DialogContent>
