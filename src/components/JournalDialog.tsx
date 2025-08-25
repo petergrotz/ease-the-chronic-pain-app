@@ -186,9 +186,18 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
     });
   };
 
-  const truncateText = (text: string, maxLength: number = 100) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
+  const truncateToLines = (text: string, maxLines: number = 3) => {
+    const lines = text.split('\n');
+    if (lines.length <= maxLines) return text;
+    return lines.slice(0, maxLines).join('\n') + "...";
+  };
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    });
   };
 
   return (
@@ -311,14 +320,20 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                   {entries.map((entry) => (
                     <div 
                       key={entry.id}
-                      className="bg-secondary/20 border border-border p-4 rounded-xl"
+                      className="bg-secondary/20 border border-border p-4 rounded-xl cursor-pointer hover:bg-secondary/30 transition-colors"
+                      onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           <span className="text-xl">{entry.emoji}</span>
-                          <span className="font-retro text-white">
-                            {formatDate(entry.timestamp)}
-                          </span>
+                          <div className="flex flex-col">
+                            <span className="font-retro text-white text-sm">
+                              {formatDate(entry.timestamp)}
+                            </span>
+                            <span className="font-retro text-white/70 text-xs">
+                              {formatTime(entry.timestamp)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                       
@@ -328,27 +343,21 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                         </p>
                       )}
                       
-                      <div className="font-retro text-sm">
+                      <div className="font-retro text-sm text-white">
                         {expandedEntry === entry.id ? (
                           <div>
                             <p className="whitespace-pre-wrap">{entry.body}</p>
-                            <button
-                              onClick={() => setExpandedEntry(null)}
-                              className="text-primary hover:underline mt-2"
-                            >
-                              Show less
-                            </button>
+                            <p className="text-primary hover:underline mt-2 text-xs">
+                              Click to collapse
+                            </p>
                           </div>
                         ) : (
                           <div>
-                            <p>{truncateText(entry.body)}</p>
-                            {entry.body.length > 100 && (
-                              <button
-                                onClick={() => setExpandedEntry(entry.id)}
-                                className="text-primary hover:underline mt-2"
-                              >
-                                Read more
-                              </button>
+                            <p className="whitespace-pre-wrap">{truncateToLines(entry.body)}</p>
+                            {entry.body.split('\n').length > 3 && (
+                              <p className="text-primary hover:underline mt-2 text-xs">
+                                Click to expand
+                              </p>
                             )}
                           </div>
                         )}
