@@ -80,7 +80,7 @@ const socialOptions = [
 ];
 
 const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
-  const [view, setView] = useState<'entry' | 'post-save' | 'history' | 'insights'>('entry');
+  const [view, setView] = useState<'entry' | 'post-save' | 'insights'>('entry');
   const [intensity, setIntensity] = useState([5]);
   const [selectedQualities, setSelectedQualities] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
@@ -364,6 +364,68 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               <span>More</span>
             </div>
           </div>
+
+          {/* Entry History */}
+          <div className="p-4 border rounded-lg">
+            <h3 className="font-medium mb-4">Your Entry History</h3>
+            {entries.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="w-12 h-12 bg-pain-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Save className="w-6 h-6 text-pain-primary" />
+                </div>
+                <p className="text-muted-foreground text-sm">
+                  Your first check-in creates your pain timeline.
+                </p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Your pain logs stay on your device unless you choose to export them.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4 max-h-80 overflow-y-auto">
+                <div className="text-xs text-muted-foreground text-center mb-4 p-2 bg-pain-primary/5 rounded-lg">
+                  Your pain logs stay on your device unless you choose to export them.
+                </div>
+                {entries.map((entry) => {
+                  const emojis = ["🌿", "🌊", "🌙", "☁️", "✨"];
+                  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                  return (
+                    <div key={entry.id} className="p-3 border rounded-lg space-y-2 text-sm">
+                      <div className="flex justify-between items-start">
+                        <div className="text-sm text-muted-foreground flex items-center gap-2">
+                          <span>{emoji}</span>
+                          <span>{new Date(entry.date).toLocaleDateString()}</span>
+                          <span>• Pain: {entry.intensity}/10</span>
+                        </div>
+                      </div>
+                      {entry.location && entry.location.length > 0 && (
+                        <div className="text-xs">
+                          <span className="font-medium">Location:</span> {entry.location.join(', ')}
+                        </div>
+                      )}
+                      {entry.quality.length > 0 && (
+                        <div className="text-xs">
+                          <span className="font-medium">Type:</span> {entry.quality.join(', ')}
+                        </div>
+                      )}
+                      {entry.context.length > 0 && (
+                        <div className="text-xs">
+                          <span className="font-medium">Factors:</span> {entry.context.join(', ')}
+                        </div>
+                      )}
+                      {entry.helped && entry.helped.length > 0 && (
+                        <div className="text-xs">
+                          <span className="font-medium">What helped:</span> {entry.helped.join(', ')}
+                        </div>
+                      )}
+                      {entry.notes && (
+                        <div className="text-xs italic">"{entry.notes}"</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </ScrollArea>
     );
@@ -374,7 +436,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
       <DialogContent className="max-w-4xl h-[80vh] font-retro border-2 border-pain-primary/20 text-foreground backdrop-blur-sm rounded-2xl" style={{backgroundColor: 'hsl(var(--pain-bg))'}}>
         <DialogHeader>
           <DialogTitle className="font-retro text-2xl text-center flex items-center justify-center gap-3 text-pain-primary">
-            {(view === 'history' || view === 'insights') && (
+            {view === 'insights' && (
               <button
                 onClick={() => setView('entry')}
                 className="p-1 hover:bg-accent rounded-lg transition-colors"
@@ -384,7 +446,6 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
             )}
             {view === 'entry' && "Track your Trends and Symptoms"}
             {view === 'post-save' && "What helped ease your pain today?"}
-            {view === 'history' && "Your Pain Timeline"}
             {view === 'insights' && "Your Pain Insights"}
           </DialogTitle>
           {view === 'entry' && (
@@ -402,6 +463,20 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
         <div className="overflow-y-auto h-full px-8 pb-8">
           {view === 'entry' && (
             <>
+              {/* View Insights Button */}
+              {entries.length > 0 && (
+                <div className="mb-6 flex justify-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setView('insights')} 
+                    className="flex items-center gap-2"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    View Insights
+                  </Button>
+                </div>
+              )}
+
               {/* Pain Intensity Slider */}
               <div className="space-y-4 mb-8">
                 <label className="text-sm font-medium">Overall, how intense is your pain right now?</label>
@@ -793,93 +868,6 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
 
           {view === 'insights' && renderInsights()}
 
-          {view === 'history' && (
-            <ScrollArea className="h-[400px]">
-              <div className="space-y-4">
-                {entries.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-12 h-12 bg-pain-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Save className="w-6 h-6 text-pain-primary" />
-                    </div>
-                    <p className="text-muted-foreground text-sm">
-                      Your first check-in creates your pain timeline.
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      Your pain logs stay on your device unless you choose to export them.
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="text-xs text-muted-foreground text-center mb-4 p-2 bg-pain-primary/5 rounded-lg">
-                      Your pain logs stay on your device unless you choose to export them.
-                    </div>
-                    {entries.map((entry) => {
-                      const emojis = ["🌿", "🌊", "🌙", "☁️", "✨"];
-                      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-                      return (
-                        <div key={entry.id} className="p-4 border rounded-lg space-y-2">
-                          <div className="flex justify-between items-start">
-                            <div className="text-sm text-muted-foreground flex items-center gap-2">
-                              <span>{emoji}</span>
-                              <span>{new Date(entry.date).toLocaleDateString()}</span>
-                              <span>• Pain: {entry.intensity}/10</span>
-                            </div>
-                          </div>
-                          {entry.location && entry.location.length > 0 && (
-                            <div className="text-xs">
-                              <span className="font-medium">Location:</span> {entry.location.join(', ')}
-                            </div>
-                          )}
-                          {entry.quality.length > 0 && (
-                            <div className="text-xs">
-                              <span className="font-medium">Type:</span> {entry.quality.join(', ')}
-                            </div>
-                          )}
-                          {entry.context.length > 0 && (
-                            <div className="text-xs">
-                              <span className="font-medium">Factors:</span> {entry.context.join(', ')}
-                            </div>
-                          )}
-                          {entry.helped && entry.helped.length > 0 && (
-                            <div className="text-xs">
-                              <span className="font-medium">What helped:</span> {entry.helped.join(', ')}
-                            </div>
-                          )}
-                          {entry.notes && (
-                            <div className="text-xs italic">"{entry.notes}"</div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </>
-                )}
-              </div>
-            </ScrollArea>
-          )}
-
-          {view === 'entry' && (
-            <div className="flex gap-4 mt-6">
-              {entries.length > 0 && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setView('history')} 
-                  className="flex-1"
-                >
-                  View History ({entries.length} entries)
-                </Button>
-              )}
-              {entries.length > 0 && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setView('insights')} 
-                  className="flex-1"
-                >
-                  <BarChart3 className="w-4 h-4 mr-2" />
-                  View Insights
-                </Button>
-              )}
-            </div>
-          )}
         </div>
       </DialogContent>
     </Dialog>
