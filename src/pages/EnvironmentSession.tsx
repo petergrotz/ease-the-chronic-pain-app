@@ -245,7 +245,7 @@ const EnvironmentSession = () => {
       )}
 
       {/* Return to Main Menu Button - Top Left */}
-      <div className="absolute top-6 left-6 z-20">
+      <div className="absolute top-16 md:top-6 left-6 z-20">
         <Button
           onClick={handleReturnToMenu}
           variant="secondary"
@@ -291,7 +291,7 @@ const EnvironmentSession = () => {
 
       {/* Volume Control - Bottom Right */}
       <div 
-        className="absolute bottom-6 right-6 z-20"
+        className="absolute bottom-16 md:bottom-6 right-6 z-20"
         onMouseEnter={() => setShowVolumeControl(true)}
         onMouseLeave={() => setShowVolumeControl(false)}
       >
