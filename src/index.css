@@ -43,7 +43,7 @@ All colors MUST be HSL. Premium wellness app aesthetic.
     --eggshell-foreground: 180 20% 15%;
 
     /* Pain tracker colors - Pale mist blue theme */
-    --pain-primary: 210 45% 65%;    /* Pale blue */
+    --pain-primary: 210 30% 75%;    /* Very pale blue */
     --pain-primary-foreground: 210 60% 15%;
     --pain-accent: 205 35% 80%;     /* Light pale blue */
     --pain-accent-foreground: 205 30% 25%;
