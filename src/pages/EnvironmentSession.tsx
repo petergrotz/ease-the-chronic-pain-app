@@ -291,7 +291,7 @@ const EnvironmentSession = () => {
 
       {/* Volume Control - Bottom Right */}
       <div 
-        className="absolute bottom-16 md:bottom-6 right-6 z-20"
+        className="absolute bottom-16 md:bottom-6 right-2 md:right-6 z-20"
         onMouseEnter={() => setShowVolumeControl(true)}
         onMouseLeave={() => setShowVolumeControl(false)}
       >
