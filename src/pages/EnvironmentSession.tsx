@@ -196,7 +196,7 @@ const EnvironmentSession = () => {
       {environment.video ? (
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-contain bg-black"
+          className="absolute inset-0 h-full w-full object-cover md:object-contain bg-black"
           autoPlay
           loop
           muted
@@ -206,7 +206,7 @@ const EnvironmentSession = () => {
         </video>
       ) : (
         <div
-          className="absolute inset-0 h-full w-full bg-contain bg-center bg-no-repeat bg-black"
+          className="absolute inset-0 h-full w-full bg-cover md:bg-contain bg-center bg-no-repeat bg-black"
           style={{
             backgroundImage: `url(${environment.image})`,
           }}
