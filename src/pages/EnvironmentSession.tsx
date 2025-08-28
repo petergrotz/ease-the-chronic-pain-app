@@ -11,61 +11,61 @@ const environmentData = {
   1: {
     name: "Forest Meadow",
     video: null,
-    audio: "/Forest Meadow sound.mp3",
+    audio: "/forest-meadow-sound.mp3",
     image: "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png"
   },
   2: {
     name: "Snowy Garden",
-    video: "/Zen Garden Video.mp4",
-    audio: "/Zen garden sound.mp3",
+    video: "/zen-garden-video.mp4",
+    audio: "/zen-garden-sound.mp3",
     image: "/lovable-uploads/b57d8d62-e588-4736-b270-b83356e82d3d.png"
   },
   3: {
     name: "Tropical Beach",
     video: null,
-    audio: "/Lake sound.mp3",
+    audio: "/lake-sound.mp3",
     image: "/lovable-uploads/4e07f67f-896c-4899-91ce-eee9bf5b32ce.png"
   },
   4: {
     name: "Starry Night Campfire",
-    video: "/Campfire Video.mp4",
-    audio: "/Campfire at night sound.mp3",
+    video: "/campfire-video.mp4",
+    audio: "/campfire-at-night-sound.mp3",
     image: "/lovable-uploads/780328a3-0b8b-4aa3-a1af-d61ce7fa6a47.png"
   },
   6: {
     name: "Cat Cafe",
-    video: "/Cozy Cafe Video.mp4",
-    audio: "/Cafe Sound.mp3",
+    video: "/cozy-cafe-video.mp4",
+    audio: "/cafe-sound.mp3",
     image: "/lovable-uploads/5d39738b-cee2-4aeb-b213-58a4eed50438.png"
   },
   7: {
     name: "Lakeside Retreat",
-    video: "/Lakeside Retreat Video.mp4",
-    audio: "/Lake sound.mp3",
+    video: "/lakeside-retreat-video.mp4",
+    audio: "/lake-sound.mp3",
     image: "/lovable-uploads/e5e6ddbd-8f7f-47b3-97ec-37cb07049f25.png"
   },
   8: {
     name: "Mountaintop Dawn",
-    video: "/Mountain Sunrise Video.mp4",
-    audio: "/Forest Meadow sound.mp3",
+    video: "/mountain-sunrise-video.mp4",
+    audio: "/forest-meadow-sound.mp3",
     image: "/lovable-uploads/cd383841-bc09-4ef7-9a25-ef939e071f23.png"
   },
   9: {
     name: "Relaxing Spa",
-    video: "/Spa Retreat Video.mp4",
-    audio: "/spa sound.mp3",
+    video: "/spa-retreat-video.mp4",
+    audio: "/spa-sound.mp3",
     image: "/lovable-uploads/acc2697c-41d0-48a5-9ea0-e71b200e34d0.png"
   },
   10: {
     name: "Verdant Greenhouse",
     video: null,
-    audio: "/Greenhouse music.mp3",
+    audio: "/greenhouse-music.mp3",
     image: "/lovable-uploads/5b071dfe-e537-46ea-b5ef-2eb7374076c4.png"
   },
   11: {
     name: "Cozy Mountain Lodge",
-    video: "/20250804_1720_Cozy Cabin Retreat_loop_01k1vsjx86fepajg9knasqfwqx.mp4",
-    audio: "/Cozy Cabin Retreat sound.mp3",
+    video: "/cozy-cabin-retreat-loop.mp4",
+    audio: "/cozy-cabin-retreat-sound.mp3",
     image: "/lovable-uploads/64c38433-d24d-47ba-8bf7-ec4091688485.png"
   }
 };
@@ -222,7 +222,7 @@ const EnvironmentSession = () => {
       
       {/* ElevenLabs Body Scan Audio */}
       <audio ref={bodyScanAudioRef} preload="auto">
-        <source src="/ElevenLabs_2025-08-08T22_26_34_Eryn - Therapist, Doctor, Trusted Friend, Meditation, Psychiatrist_pvc_sp70_s90_sb75_se20_b_m2.mp3" type="audio/mpeg" />
+        <source src="/body-scan-audio.mp3" type="audio/mpeg" />
       </audio>
 
       {/* Overlay for better text visibility */}
