@@ -467,9 +467,8 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
               {entries.length > 0 && (
                 <div className="mb-6 flex justify-center">
                   <Button 
-                    variant="outline" 
                     onClick={() => setView('insights')} 
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 bg-pain-primary text-white hover:bg-pain-primary/90"
                   >
                     <BarChart3 className="w-4 h-4" />
                     View Insights
