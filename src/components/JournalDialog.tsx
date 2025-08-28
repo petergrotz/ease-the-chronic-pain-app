@@ -216,114 +216,112 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
         </DialogHeader>
 
         {view === 'compose' && (
-          <div className="flex flex-col h-full">
-            <div className="flex justify-center mb-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setView('history')}
-                className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl"
-                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-              >
-                View Journal
-              </Button>
-            </div>
-
-            <div className="mb-4 text-center">
-              <p className="font-retro text-sm text-white leading-relaxed">
-                This is your journaling space — a gentle place to reflect on your body, your pain, and the small moments of ease. Choose a prompt below, or just start writing what's on your mind.
-              </p>
-            </div>
-
-            <div className="mb-4">
-              <Select onValueChange={addPromptToText} value="">
-                <SelectTrigger className="w-full font-retro bg-secondary/30 border-border text-foreground rounded-xl">
-                  <SelectValue placeholder="Inspiration to get you started..." />
-                  <ChevronDown className="w-4 h-4" />
-                </SelectTrigger>
-                <SelectContent className="max-h-[300px] bg-card border-border rounded-xl z-50">
-                  <div className="bg-card">
-                    {MICRO_PROMPTS.map((prompt, index) => (
-                      <SelectItem 
-                        key={index} 
-                        value={prompt}
-                        className="font-retro text-sm py-3 px-4 hover:bg-secondary/20 focus:bg-secondary/20 text-foreground"
-                      >
-                        {prompt}
-                      </SelectItem>
-                    ))}
-                  </div>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex-1 min-h-0">
-              <ScrollArea className="h-full">
-                <div className="space-y-4 px-1">
-                  <div className="min-h-[200px] md:min-h-[300px]">
-                    <Textarea
-                      value={journalText}
-                      onChange={(e) => setJournalText(e.target.value)}
-                      placeholder="Write a few lines. Anything is welcome."
-                      className="h-full min-h-[200px] md:min-h-[300px] resize-none font-retro border-border placeholder:text-muted-foreground rounded-xl p-4 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.5)] focus:ring-2 focus:ring-cyan-400/30"
-                      style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-                    />
-                  </div>
-
-                  <div className="flex justify-between gap-3 pb-4">
-                    <Button 
-                      variant="outline" 
-                      className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl flex-1 sm:flex-none"
-                      style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-                      onClick={() => {
-                        // Voice-to-text placeholder
-                        toast({
-                          title: "Voice to text",
-                          description: "Voice-to-text feature coming soon!",
-                        });
-                      }}
-                    >
-                      <Mic className="w-4 h-4 mr-2" />
-                      Voice to Text
-                    </Button>
-                    <Button 
-                      variant="default" 
-                      onClick={saveEntry}
-                      disabled={!journalText.trim()}
-                      className="font-retro rounded-xl flex-1 sm:flex-none"
-                      style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save Entry
-                    </Button>
-                  </div>
+          <div className="flex flex-col h-full min-h-0">
+            <ScrollArea className="h-full">
+              <div className="space-y-4 p-4">
+                <div className="flex justify-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setView('history')}
+                    className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl"
+                    style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                  >
+                    View Journal
+                  </Button>
                 </div>
-              </ScrollArea>
-            </div>
+
+                <div className="text-center">
+                  <p className="font-retro text-sm text-white leading-relaxed">
+                    This is your journaling space — a gentle place to reflect on your body, your pain, and the small moments of ease. Choose a prompt below, or just start writing what's on your mind.
+                  </p>
+                </div>
+
+                <div>
+                  <Select onValueChange={addPromptToText} value="">
+                    <SelectTrigger className="w-full font-retro bg-secondary/30 border-border text-foreground rounded-xl">
+                      <SelectValue placeholder="Inspiration to get you started..." />
+                      <ChevronDown className="w-4 h-4" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px] bg-card border-border rounded-xl z-50">
+                      <div className="bg-card">
+                        {MICRO_PROMPTS.map((prompt, index) => (
+                          <SelectItem 
+                            key={index} 
+                            value={prompt}
+                            className="font-retro text-sm py-3 px-4 hover:bg-secondary/20 focus:bg-secondary/20 text-foreground"
+                          >
+                            {prompt}
+                          </SelectItem>
+                        ))}
+                      </div>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="min-h-[200px] md:min-h-[300px]">
+                  <Textarea
+                    value={journalText}
+                    onChange={(e) => setJournalText(e.target.value)}
+                    placeholder="Write a few lines. Anything is welcome."
+                    className="h-full min-h-[200px] md:min-h-[300px] resize-none font-retro border-border placeholder:text-muted-foreground rounded-xl p-4 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.5)] focus:ring-2 focus:ring-cyan-400/30"
+                    style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                  />
+                </div>
+
+                <div className="flex justify-between gap-3">
+                  <Button 
+                    variant="outline" 
+                    className="font-retro border-primary/30 hover:bg-primary/10 rounded-xl flex-1 sm:flex-none"
+                    style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                    onClick={() => {
+                      // Voice-to-text placeholder
+                      toast({
+                        title: "Voice to text",
+                        description: "Voice-to-text feature coming soon!",
+                      });
+                    }}
+                  >
+                    <Mic className="w-4 h-4 mr-2" />
+                    Voice to Text
+                  </Button>
+                  <Button 
+                    variant="default" 
+                    onClick={saveEntry}
+                    disabled={!journalText.trim()}
+                    className="font-retro rounded-xl flex-1 sm:flex-none"
+                    style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Entry
+                  </Button>
+                </div>
+              </div>
+            </ScrollArea>
           </div>
         )}
 
         {view === 'history' && (
-          <div className="flex flex-col h-full">
-            <div className="flex justify-center mb-4">
-              <Button 
-                variant="default" 
-                onClick={() => setView('compose')}
-                className="font-retro rounded-xl"
-                style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
-              >
-                <BookOpen className="w-4 h-4 mr-2" />
-                Start Journaling
-              </Button>
-            </div>
+          <div className="flex flex-col h-full min-h-0">
+            <ScrollArea className="h-full">
+              <div className="space-y-4 p-4">
+                <div className="flex justify-center">
+                  <Button 
+                    variant="default" 
+                    onClick={() => setView('compose')}
+                    className="font-retro rounded-xl"
+                    style={{backgroundColor: 'hsl(var(--eggshell))', color: 'hsl(var(--eggshell-foreground))'}}
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Start Journaling
+                  </Button>
+                </div>
 
-            <div className="flex-1 min-h-0">
-              <ScrollArea className="h-full max-h-[500px]">
                 {entries.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <p className="font-retro text-lg">First step counts. Pick a prompt to begin.</p>
                   </div>
                 ) : (
-                  <div className="space-y-4 p-4">
+                  <div className="space-y-4">
                     {entries.map((entry) => (
                       <div 
                         key={entry.id}
@@ -373,8 +371,8 @@ export default function JournalDialog({ open, onOpenChange }: JournalDialogProps
                     ))}
                   </div>
                 )}
-              </ScrollArea>
-            </div>
+              </div>
+            </ScrollArea>
           </div>
         )}
       </DialogContent>
