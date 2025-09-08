@@ -77,12 +77,16 @@ const EnvironmentSession = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const bodyScanAudioRef = useRef<HTMLAudioElement>(null);
   const pmrAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
+  const activityPacingAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
   const [volume, setVolume] = useState([80]);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
   const [isBodyScanPlaying, setIsBodyScanPlaying] = useState(false);
   const [isPMRPlaying, setIsPMRPlaying] = useState(false);
+  const [isActivityPacingPlaying, setIsActivityPacingPlaying] = useState(false);
   const [currentPMRIndex, setCurrentPMRIndex] = useState(0);
+  const [currentActivityPacingIndex, setCurrentActivityPacingIndex] = useState(0);
   const [pmrPauseTimeLeft, setPmrPauseTimeLeft] = useState(0);
+  const [activityPacingPauseTimeLeft, setActivityPacingPauseTimeLeft] = useState(0);
   const [audioProgress, setAudioProgress] = useState(0);
 
   const activityOptions = [
@@ -130,6 +134,25 @@ const EnvironmentSession = () => {
         firstAudio.volume = volume[0] / 100;
         firstAudio.play().catch(console.warn);
       }
+    } else if (activity === "Activity Pacing") {
+      // Keep ambient audio playing in background, just lower its volume
+      if (audioRef.current) {
+        audioRef.current.volume = (volume[0] / 100) * 0.3;
+      }
+      
+      // Start Activity Pacing session
+      setIsActivityPacingPlaying(true);
+      setCurrentActivityPacingIndex(0);
+      setAudioProgress(0);
+      setActivityPacingPauseTimeLeft(0);
+      
+      // Play first Activity Pacing audio
+      const firstAudio = activityPacingAudioRefs.current[0];
+      if (firstAudio) {
+        firstAudio.currentTime = 0;
+        firstAudio.volume = volume[0] / 100;
+        firstAudio.play().catch(console.warn);
+      }
     }
   };
 
@@ -160,6 +183,93 @@ const EnvironmentSession = () => {
       audio.removeEventListener('ended', handleEnded);
     };
   }, [environment.audio]);
+
+  // Setup Activity Pacing audio management
+  useEffect(() => {
+    if (!isActivityPacingPlaying) return;
+
+    const currentAudio = activityPacingAudioRefs.current[currentActivityPacingIndex];
+    if (!currentAudio) return;
+
+    const handleTimeUpdate = () => {
+      // Calculate total progress across all exercises and pauses
+      const totalExercises = 3;
+      const pauseDuration = 5; // seconds
+      const exerciseSegmentWeight = 100 / (totalExercises + (totalExercises - 1) * (pauseDuration / 60)); // Assume ~60s per exercise
+      
+      let totalProgress = 0;
+      
+      // Add progress from completed exercises
+      for (let i = 0; i < currentActivityPacingIndex; i++) {
+        totalProgress += exerciseSegmentWeight;
+        if (i < totalExercises - 1) {
+          totalProgress += exerciseSegmentWeight * (pauseDuration / 60);
+        }
+      }
+      
+      // Add progress from current exercise or pause
+      if (activityPacingPauseTimeLeft > 0) {
+        // During pause
+        const pauseProgress = ((pauseDuration - activityPacingPauseTimeLeft) / pauseDuration) * exerciseSegmentWeight * (pauseDuration / 60);
+        totalProgress += exerciseSegmentWeight + pauseProgress;
+      } else {
+        // During exercise
+        const exerciseProgress = (currentAudio.currentTime / currentAudio.duration) * exerciseSegmentWeight;
+        totalProgress += exerciseProgress;
+      }
+      
+      setAudioProgress(Math.min(totalProgress, 100));
+    };
+
+    const handleEnded = () => {
+      if (currentActivityPacingIndex < 2) {
+        // Start 5-second pause before next exercise
+        setActivityPacingPauseTimeLeft(5);
+        
+        const pauseInterval = setInterval(() => {
+          setActivityPacingPauseTimeLeft((prev) => {
+            if (prev <= 1) {
+              clearInterval(pauseInterval);
+              // Move to next exercise
+              setCurrentActivityPacingIndex((prevIndex) => prevIndex + 1);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        // All exercises completed
+        setIsActivityPacingPlaying(false);
+        setCurrentActivityPacingIndex(0);
+        setAudioProgress(100);
+        setActivityPacingPauseTimeLeft(0);
+        // Restore ambient audio volume
+        if (audioRef.current && environment.audio) {
+          audioRef.current.volume = volume[0] / 100;
+        }
+      }
+    };
+
+    currentAudio.addEventListener('timeupdate', handleTimeUpdate);
+    currentAudio.addEventListener('ended', handleEnded);
+
+    return () => {
+      currentAudio.removeEventListener('timeupdate', handleTimeUpdate);
+      currentAudio.removeEventListener('ended', handleEnded);
+    };
+  }, [isActivityPacingPlaying, currentActivityPacingIndex, activityPacingPauseTimeLeft, environment.audio, volume]);
+
+  // Start next Activity Pacing exercise after pause
+  useEffect(() => {
+    if (isActivityPacingPlaying && activityPacingPauseTimeLeft === 0 && currentActivityPacingIndex > 0) {
+      const nextAudio = activityPacingAudioRefs.current[currentActivityPacingIndex];
+      if (nextAudio) {
+        nextAudio.currentTime = 0;
+        nextAudio.volume = volume[0] / 100;
+        nextAudio.play().catch(console.warn);
+      }
+    }
+  }, [currentActivityPacingIndex, activityPacingPauseTimeLeft, isActivityPacingPlaying, volume]);
 
   // Setup PMR audio management
   useEffect(() => {
@@ -284,8 +394,8 @@ const EnvironmentSession = () => {
   // Update audio volume when slider changes
   useEffect(() => {
     if (audioRef.current) {
-      // If body scan or PMR is playing, keep ambient audio at lower volume, otherwise full volume
-      audioRef.current.volume = (isBodyScanPlaying || isPMRPlaying) ? (volume[0] / 100) * 0.3 : volume[0] / 100;
+      // If body scan, PMR, or Activity Pacing is playing, keep ambient audio at lower volume, otherwise full volume
+      audioRef.current.volume = (isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying) ? (volume[0] / 100) * 0.3 : volume[0] / 100;
     }
     if (bodyScanAudioRef.current) {
       bodyScanAudioRef.current.volume = volume[0] / 100;
@@ -296,7 +406,13 @@ const EnvironmentSession = () => {
         audio.volume = volume[0] / 100;
       }
     });
-  }, [volume, isBodyScanPlaying, isPMRPlaying]);
+    // Update Activity Pacing audio volumes
+    activityPacingAudioRefs.current.forEach((audio) => {
+      if (audio) {
+        audio.volume = volume[0] / 100;
+      }
+    });
+  }, [volume, isBodyScanPlaying, isPMRPlaying, isActivityPacingPlaying]);
 
   if (!environment) {
     return null;
@@ -356,11 +472,26 @@ const EnvironmentSession = () => {
         </audio>
       ))}
 
+      {/* Activity Pacing Audio Files */}
+      {[1, 2, 3].map((num) => (
+        <audio 
+          key={num}
+          ref={(el) => {
+            if (activityPacingAudioRefs.current) {
+              activityPacingAudioRefs.current[num - 1] = el;
+            }
+          }}
+          preload="auto"
+        >
+          <source src={`/activity-pacing-${num}.mp3`} type="audio/mpeg" />
+        </audio>
+      ))}
+
       {/* Overlay for better text visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
 
       {/* Progress Bar - Top of Screen */}
-      {(isBodyScanPlaying || isPMRPlaying) && (
+      {(isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying) && (
         <div className="absolute top-0 left-0 right-0 z-30 p-4">
           <Progress 
             value={audioProgress} 
@@ -382,7 +513,7 @@ const EnvironmentSession = () => {
       </div>
 
       {/* Start Session Dropdown - Center */}
-      {!isBodyScanPlaying && !isPMRPlaying && (
+      {!isBodyScanPlaying && !isPMRPlaying && !isActivityPacingPlaying && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="text-center">
             <DropdownMenu>
