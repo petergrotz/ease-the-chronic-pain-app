@@ -171,7 +171,7 @@ const EnvironmentSession = () => {
     const handleTimeUpdate = () => {
       // Calculate total progress across all exercises and pauses
       const totalExercises = 7;
-      const pauseDuration = 10; // seconds
+      const pauseDuration = 5; // seconds
       const exerciseSegmentWeight = 100 / (totalExercises + (totalExercises - 1) * (pauseDuration / 60)); // Assume ~60s per exercise
       
       let totalProgress = 0;
@@ -200,8 +200,8 @@ const EnvironmentSession = () => {
 
     const handleEnded = () => {
       if (currentPMRIndex < 6) {
-        // Start 10-second pause before next exercise
-        setPmrPauseTimeLeft(10);
+        // Start 5-second pause before next exercise
+        setPmrPauseTimeLeft(5);
         
         const pauseInterval = setInterval(() => {
           setPmrPauseTimeLeft((prev) => {
@@ -362,20 +362,10 @@ const EnvironmentSession = () => {
       {/* Progress Bar - Top of Screen */}
       {(isBodyScanPlaying || isPMRPlaying) && (
         <div className="absolute top-0 left-0 right-0 z-30 p-4">
-          <div className="bg-black/60 backdrop-blur-sm rounded-lg p-3 border border-white/20">
-            <div className="flex items-center gap-3 text-white">
-              <span className="text-sm">
-                {isBodyScanPlaying ? "Body Scan Session" : "Progressive Muscle Relaxation"}
-                {isPMRPlaying && pmrPauseTimeLeft > 0 && ` - Pause: ${pmrPauseTimeLeft}s`}
-                {isPMRPlaying && pmrPauseTimeLeft === 0 && ` - Exercise ${currentPMRIndex + 1}/7`}
-              </span>
-              <Progress 
-                value={audioProgress} 
-                className="flex-1 h-2 bg-white/20" 
-              />
-              <span className="text-sm">{Math.round(audioProgress)}%</span>
-            </div>
-          </div>
+          <Progress 
+            value={audioProgress} 
+            className="h-2 bg-white/20" 
+          />
         </div>
       )}
 
