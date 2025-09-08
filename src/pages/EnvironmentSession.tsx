@@ -76,6 +76,7 @@ const EnvironmentSession = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const bodyScanAudioRef = useRef<HTMLAudioElement>(null);
+  const painEducationAudioRef = useRef<HTMLAudioElement>(null);
   const pmrAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
   const activityPacingAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
   const [volume, setVolume] = useState([80]);
@@ -83,6 +84,7 @@ const EnvironmentSession = () => {
   const [isBodyScanPlaying, setIsBodyScanPlaying] = useState(false);
   const [isPMRPlaying, setIsPMRPlaying] = useState(false);
   const [isActivityPacingPlaying, setIsActivityPacingPlaying] = useState(false);
+  const [isPainEducationPlaying, setIsPainEducationPlaying] = useState(false);
   const [currentPMRIndex, setCurrentPMRIndex] = useState(0);
   const [currentActivityPacingIndex, setCurrentActivityPacingIndex] = useState(0);
   const [pmrPauseTimeLeft, setPmrPauseTimeLeft] = useState(0);
@@ -153,6 +155,20 @@ const EnvironmentSession = () => {
         firstAudio.volume = volume[0] / 100;
         firstAudio.play().catch(console.warn);
       }
+    } else if (activity === "Pain Education") {
+      // Keep ambient audio playing in background, just lower its volume
+      if (audioRef.current) {
+        audioRef.current.volume = (volume[0] / 100) * 0.3;
+      }
+      
+      // Play pain education audio
+      if (painEducationAudioRef.current) {
+        setIsPainEducationPlaying(true);
+        setAudioProgress(0);
+        painEducationAudioRef.current.currentTime = 0;
+        painEducationAudioRef.current.volume = volume[0] / 100;
+        painEducationAudioRef.current.play().catch(console.warn);
+      }
     }
   };
 
@@ -182,7 +198,35 @@ const EnvironmentSession = () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [environment.audio]);
+  }, [environment.audio, volume]);
+
+  // Setup pain education audio event listeners
+  useEffect(() => {
+    const audio = painEducationAudioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      const progress = (audio.currentTime / audio.duration) * 100;
+      setAudioProgress(progress);
+    };
+
+    const handleEnded = () => {
+      setIsPainEducationPlaying(false);
+      setAudioProgress(0);
+      // Restore ambient audio volume to full
+      if (audioRef.current && environment.audio) {
+        audioRef.current.volume = volume[0] / 100;
+      }
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [environment.audio, volume]);
 
   // Setup Activity Pacing audio management
   useEffect(() => {
@@ -394,11 +438,14 @@ const EnvironmentSession = () => {
   // Update audio volume when slider changes
   useEffect(() => {
     if (audioRef.current) {
-      // If body scan, PMR, or Activity Pacing is playing, keep ambient audio at lower volume, otherwise full volume
-      audioRef.current.volume = (isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying) ? (volume[0] / 100) * 0.3 : volume[0] / 100;
+      // If any session is playing, keep ambient audio at lower volume, otherwise full volume
+      audioRef.current.volume = (isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying || isPainEducationPlaying) ? (volume[0] / 100) * 0.3 : volume[0] / 100;
     }
     if (bodyScanAudioRef.current) {
       bodyScanAudioRef.current.volume = volume[0] / 100;
+    }
+    if (painEducationAudioRef.current) {
+      painEducationAudioRef.current.volume = volume[0] / 100;
     }
     // Update PMR audio volumes
     pmrAudioRefs.current.forEach((audio) => {
@@ -412,7 +459,7 @@ const EnvironmentSession = () => {
         audio.volume = volume[0] / 100;
       }
     });
-  }, [volume, isBodyScanPlaying, isPMRPlaying, isActivityPacingPlaying]);
+  }, [volume, isBodyScanPlaying, isPMRPlaying, isActivityPacingPlaying, isPainEducationPlaying]);
 
   if (!environment) {
     return null;
@@ -457,6 +504,11 @@ const EnvironmentSession = () => {
         <source src="/body-scan-audio.mp3" type="audio/mpeg" />
       </audio>
 
+      {/* Pain Education Audio */}
+      <audio ref={painEducationAudioRef} preload="auto">
+        <source src="/pain-education.mp3" type="audio/mpeg" />
+      </audio>
+
       {/* PMR Audio Files */}
       {[1, 2, 3, 4, 5, 6, 7].map((num) => (
         <audio 
@@ -491,7 +543,7 @@ const EnvironmentSession = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
 
       {/* Progress Bar - Top of Screen */}
-      {(isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying) && (
+      {(isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying || isPainEducationPlaying) && (
         <div className="absolute top-0 left-0 right-0 z-30 p-4">
           <Progress 
             value={audioProgress} 
@@ -513,7 +565,7 @@ const EnvironmentSession = () => {
       </div>
 
       {/* Start Session Dropdown - Center */}
-      {!isBodyScanPlaying && !isPMRPlaying && !isActivityPacingPlaying && (
+      {!isBodyScanPlaying && !isPMRPlaying && !isActivityPacingPlaying && !isPainEducationPlaying && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="text-center">
             <DropdownMenu>
