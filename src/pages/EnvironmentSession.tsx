@@ -76,9 +76,13 @@ const EnvironmentSession = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const bodyScanAudioRef = useRef<HTMLAudioElement>(null);
+  const pmrAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
   const [volume, setVolume] = useState([80]);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
   const [isBodyScanPlaying, setIsBodyScanPlaying] = useState(false);
+  const [isPMRPlaying, setIsPMRPlaying] = useState(false);
+  const [currentPMRIndex, setCurrentPMRIndex] = useState(0);
+  const [pmrPauseTimeLeft, setPmrPauseTimeLeft] = useState(0);
   const [audioProgress, setAudioProgress] = useState(0);
 
   const activityOptions = [
@@ -106,6 +110,25 @@ const EnvironmentSession = () => {
         bodyScanAudioRef.current.currentTime = 0;
         bodyScanAudioRef.current.volume = volume[0] / 100;
         bodyScanAudioRef.current.play().catch(console.warn);
+      }
+    } else if (activity === "Progressive Muscle Relaxation") {
+      // Keep ambient audio playing in background, just lower its volume
+      if (audioRef.current) {
+        audioRef.current.volume = (volume[0] / 100) * 0.3;
+      }
+      
+      // Start PMR session
+      setIsPMRPlaying(true);
+      setCurrentPMRIndex(0);
+      setAudioProgress(0);
+      setPmrPauseTimeLeft(0);
+      
+      // Play first PMR audio
+      const firstAudio = pmrAudioRefs.current[0];
+      if (firstAudio) {
+        firstAudio.currentTime = 0;
+        firstAudio.volume = volume[0] / 100;
+        firstAudio.play().catch(console.warn);
       }
     }
   };
@@ -137,6 +160,93 @@ const EnvironmentSession = () => {
       audio.removeEventListener('ended', handleEnded);
     };
   }, [environment.audio]);
+
+  // Setup PMR audio management
+  useEffect(() => {
+    if (!isPMRPlaying) return;
+
+    const currentAudio = pmrAudioRefs.current[currentPMRIndex];
+    if (!currentAudio) return;
+
+    const handleTimeUpdate = () => {
+      // Calculate total progress across all exercises and pauses
+      const totalExercises = 7;
+      const pauseDuration = 10; // seconds
+      const exerciseSegmentWeight = 100 / (totalExercises + (totalExercises - 1) * (pauseDuration / 60)); // Assume ~60s per exercise
+      
+      let totalProgress = 0;
+      
+      // Add progress from completed exercises
+      for (let i = 0; i < currentPMRIndex; i++) {
+        totalProgress += exerciseSegmentWeight;
+        if (i < totalExercises - 1) {
+          totalProgress += exerciseSegmentWeight * (pauseDuration / 60);
+        }
+      }
+      
+      // Add progress from current exercise or pause
+      if (pmrPauseTimeLeft > 0) {
+        // During pause
+        const pauseProgress = ((pauseDuration - pmrPauseTimeLeft) / pauseDuration) * exerciseSegmentWeight * (pauseDuration / 60);
+        totalProgress += exerciseSegmentWeight + pauseProgress;
+      } else {
+        // During exercise
+        const exerciseProgress = (currentAudio.currentTime / currentAudio.duration) * exerciseSegmentWeight;
+        totalProgress += exerciseProgress;
+      }
+      
+      setAudioProgress(Math.min(totalProgress, 100));
+    };
+
+    const handleEnded = () => {
+      if (currentPMRIndex < 6) {
+        // Start 10-second pause before next exercise
+        setPmrPauseTimeLeft(10);
+        
+        const pauseInterval = setInterval(() => {
+          setPmrPauseTimeLeft((prev) => {
+            if (prev <= 1) {
+              clearInterval(pauseInterval);
+              // Move to next exercise
+              setCurrentPMRIndex((prevIndex) => prevIndex + 1);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        // All exercises completed
+        setIsPMRPlaying(false);
+        setCurrentPMRIndex(0);
+        setAudioProgress(100);
+        setPmrPauseTimeLeft(0);
+        // Restore ambient audio volume
+        if (audioRef.current && environment.audio) {
+          audioRef.current.volume = volume[0] / 100;
+        }
+      }
+    };
+
+    currentAudio.addEventListener('timeupdate', handleTimeUpdate);
+    currentAudio.addEventListener('ended', handleEnded);
+
+    return () => {
+      currentAudio.removeEventListener('timeupdate', handleTimeUpdate);
+      currentAudio.removeEventListener('ended', handleEnded);
+    };
+  }, [isPMRPlaying, currentPMRIndex, pmrPauseTimeLeft, environment.audio, volume]);
+
+  // Start next PMR exercise after pause
+  useEffect(() => {
+    if (isPMRPlaying && pmrPauseTimeLeft === 0 && currentPMRIndex > 0) {
+      const nextAudio = pmrAudioRefs.current[currentPMRIndex];
+      if (nextAudio) {
+        nextAudio.currentTime = 0;
+        nextAudio.volume = volume[0] / 100;
+        nextAudio.play().catch(console.warn);
+      }
+    }
+  }, [currentPMRIndex, pmrPauseTimeLeft, isPMRPlaying, volume]);
 
   useEffect(() => {
     if (!environment) {
@@ -174,13 +284,19 @@ const EnvironmentSession = () => {
   // Update audio volume when slider changes
   useEffect(() => {
     if (audioRef.current) {
-      // If body scan is playing, keep ambient audio at lower volume, otherwise full volume
-      audioRef.current.volume = isBodyScanPlaying ? (volume[0] / 100) * 0.3 : volume[0] / 100;
+      // If body scan or PMR is playing, keep ambient audio at lower volume, otherwise full volume
+      audioRef.current.volume = (isBodyScanPlaying || isPMRPlaying) ? (volume[0] / 100) * 0.3 : volume[0] / 100;
     }
     if (bodyScanAudioRef.current) {
       bodyScanAudioRef.current.volume = volume[0] / 100;
     }
-  }, [volume, isBodyScanPlaying]);
+    // Update PMR audio volumes
+    pmrAudioRefs.current.forEach((audio) => {
+      if (audio) {
+        audio.volume = volume[0] / 100;
+      }
+    });
+  }, [volume, isBodyScanPlaying, isPMRPlaying]);
 
   if (!environment) {
     return null;
@@ -225,15 +341,34 @@ const EnvironmentSession = () => {
         <source src="/body-scan-audio.mp3" type="audio/mpeg" />
       </audio>
 
+      {/* PMR Audio Files */}
+      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+        <audio 
+          key={num}
+          ref={(el) => {
+            if (pmrAudioRefs.current) {
+              pmrAudioRefs.current[num - 1] = el;
+            }
+          }}
+          preload="auto"
+        >
+          <source src={`/PMR-${num}.mp3`} type="audio/mpeg" />
+        </audio>
+      ))}
+
       {/* Overlay for better text visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
 
-      {/* Progress Bar - Top of Screen (only show when body scan is playing) */}
-      {isBodyScanPlaying && (
+      {/* Progress Bar - Top of Screen */}
+      {(isBodyScanPlaying || isPMRPlaying) && (
         <div className="absolute top-0 left-0 right-0 z-30 p-4">
           <div className="bg-black/60 backdrop-blur-sm rounded-lg p-3 border border-white/20">
             <div className="flex items-center gap-3 text-white">
-              <span className="text-sm">Body Scan Session</span>
+              <span className="text-sm">
+                {isBodyScanPlaying ? "Body Scan Session" : "Progressive Muscle Relaxation"}
+                {isPMRPlaying && pmrPauseTimeLeft > 0 && ` - Pause: ${pmrPauseTimeLeft}s`}
+                {isPMRPlaying && pmrPauseTimeLeft === 0 && ` - Exercise ${currentPMRIndex + 1}/7`}
+              </span>
               <Progress 
                 value={audioProgress} 
                 className="flex-1 h-2 bg-white/20" 
@@ -256,8 +391,8 @@ const EnvironmentSession = () => {
         </Button>
       </div>
 
-      {/* Start Session Dropdown - Center (only show when not playing body scan) */}
-      {!isBodyScanPlaying && (
+      {/* Start Session Dropdown - Center */}
+      {!isBodyScanPlaying && !isPMRPlaying && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="text-center">
             <DropdownMenu>
