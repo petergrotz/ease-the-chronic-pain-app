@@ -4,24 +4,52 @@ import EnvironmentCarousel from "@/components/EnvironmentCarousel";
 import JournalDialog from "@/components/JournalDialog";
 import PainTrackerDialog from "@/components/PainTrackerDialog";
 const easeLogoClouds = "/lovable-uploads/ab156088-a078-4ea1-ab55-6f47188c6e4f.png";
-import { Heart, BookOpen, BarChart3, Settings } from "lucide-react";
+import { Heart, BookOpen, BarChart3, Settings, LogIn, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [journalOpen, setJournalOpen] = useState(false);
   const [painTrackerOpen, setPainTrackerOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex justify-center mb-2">
-            <img 
-              src={easeLogoClouds} 
-              alt="EASE" 
-              className="w-auto h-32 md:h-40 lg:h-48"
-            />
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex-1"></div>
+            <div className="flex justify-center">
+              <img 
+                src={easeLogoClouds} 
+                alt="EASE" 
+                className="w-auto h-32 md:h-40 lg:h-48"
+              />
+            </div>
+            <div className="flex-1 flex justify-end">
+              {user ? (
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/dashboard')}
+                  className="flex items-center space-x-2"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Dashboard</span>
+                </Button>
+              ) : (
+                <Button 
+                  variant="default" 
+                  onClick={() => navigate('/login')}
+                  className="flex items-center space-x-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Sign In</span>
+                </Button>
+              )}
+            </div>
           </div>
           <p className="font-pokemon text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
             Take control of your pain with evidence-based CBT, DBT, and mindfulness exercises designed for your healing journey.
