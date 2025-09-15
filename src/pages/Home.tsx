@@ -15,6 +15,73 @@ const Home = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="container mx-auto px-4 py-12 text-center">
+          {/* Header */}
+          <div className="mb-12">
+            <img 
+              src={easeLogoClouds} 
+              alt="EASE" 
+              className="w-auto h-32 md:h-40 lg:h-48 mx-auto mb-8"
+            />
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+              Welcome to EASE
+            </h1>
+            <p className="font-pokemon text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed mb-8">
+              Take control of your pain with evidence-based CBT, DBT, and mindfulness exercises designed for your healing journey.
+            </p>
+          </div>
+
+          {/* Sign In Prompt */}
+          <Card className="max-w-md mx-auto">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl mb-2">Get Started</CardTitle>
+              <CardDescription className="text-base">
+                Sign in to access your personalized pain management tools, track your progress, and begin your healing journey.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4">
+                <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
+                  <BookOpen className="w-5 h-5 text-primary" />
+                  <span className="text-sm">Personal journal & mood tracking</span>
+                </div>
+                <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
+                  <BarChart3 className="w-5 h-5 text-secondary" />
+                  <span className="text-sm">Pain level monitoring & insights</span>
+                </div>
+                <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
+                  <Heart className="w-5 h-5 text-accent" />
+                  <span className="text-sm">Guided meditation environments</span>
+                </div>
+              </div>
+              
+              <Button 
+                variant="default" 
+                size="lg"
+                className="w-full mt-6"
+                onClick={() => navigate('/login')}
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Sign In to Continue
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Footer */}
+          <div className="text-center mt-16">
+            <p className="font-pokemon text-muted-foreground">
+              Take control of your pain. One breath at a time.
+            </p>
+            <div className="mt-4 w-16 h-1 bg-primary rounded-full mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
@@ -30,25 +97,14 @@ const Home = () => {
               />
             </div>
             <div className="flex-1 flex justify-end">
-              {user ? (
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/dashboard')}
-                  className="flex items-center space-x-2"
-                >
-                  <User className="w-4 h-4" />
-                  <span>Dashboard</span>
-                </Button>
-              ) : (
-                <Button 
-                  variant="default" 
-                  onClick={() => navigate('/login')}
-                  className="flex items-center space-x-2"
-                >
-                  <LogIn className="w-4 h-4" />
-                  <span>Sign In</span>
-                </Button>
-              )}
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center space-x-2"
+              >
+                <User className="w-4 h-4" />
+                <span>Dashboard</span>
+              </Button>
             </div>
           </div>
           <p className="font-pokemon text-lg text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
