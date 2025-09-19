@@ -1,18 +1,15 @@
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/modern-button";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChartContainer } from "@/components/ui/chart";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { ArrowLeft, Save, BarChart3, Calendar, TrendingUp } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { ChevronLeft, Heart, Activity, Brain, Moon, Smile, Zap, Calendar, TrendingUp, Clock, Star } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface PainEntry {
   id: string;
@@ -48,35 +45,24 @@ interface PainTrackerDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const qualityOptions = [
-  "Burning", "Stabbing", "Throbbing", "Aching", 
-  "Electric", "Stiff", "Pressure"
+const PAIN_LOCATIONS = [
+  "Head/Neck", "Shoulders", "Upper Back", "Lower Back", "Arms", "Hands/Wrists", 
+  "Chest", "Abdomen", "Hips", "Legs", "Knees", "Feet/Ankles", "Whole Body"
 ];
 
-const bodyLocationOptions = [
-  "Head & face", "Neck & shoulders", "Arms & hands", "Upper back",
-  "Lower back", "Chest & ribs", "Abdomen & pelvis", "Hips & thighs",
-  "Knees", "Lower legs & calves", "Ankles & feet", "Whole body / widespread"
+const PAIN_QUALITIES = [
+  "Sharp", "Dull", "Throbbing", "Burning", "Cramping", "Stabbing", 
+  "Aching", "Tight", "Stiff", "Tingling", "Numb", "Electric"
 ];
 
-const contextOptions = [
-  "My posture or body position", "Stress or emotional strain", "Weather or temperature changes", "Recent medication use", 
-  "Recent movement or exercise", "How much water I've had", "Whether I rested or napped", "Time spent looking at screens", 
-  "Time spent outdoors", "Time spent indoors", "Exposure to noise or bright light"
+const CONTEXT_OPTIONS = [
+  "After Waking", "During Activity", "At Rest", "Weather Change", "Stress", 
+  "Poor Sleep", "Long Sitting", "Physical Activity", "Emotional Upset", "Eating", "Unknown"
 ];
 
-const helpedOptions = [
-  "Heat", "Stretching", "Breathing", "Walking", 
-  "Resting", "Drinking water", "Medication", "Talking with someone",
-  "Music", "Distraction"
-];
-
-const moodOptions = [
-  "Calm", "Anxious", "Frustrated", "Hopeful", "Sad", "Content", "Irritated", "Peaceful"
-];
-
-const socialOptions = [
-  "Time with others", "Feeling isolated", "Received support", "Helped someone else", "Alone by choice"
+const HELPED_OPTIONS = [
+  "Rest", "Heat", "Cold", "Gentle Movement", "Stretching", "Massage", "Medication", 
+  "Deep Breathing", "Meditation", "Hot Bath", "Walking", "Music", "Nature", "Tea"
 ];
 
 const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
@@ -90,6 +76,7 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
   const [impact, setImpact] = useState({ activity: 0, mood: 0, sleep: 0, concentration: 0 });
   const [notes, setNotes] = useState("");
   const [entries, setEntries] = useState<PainEntry[]>([]);
+  const [loading, setLoading] = useState(false);
   
   // New tracking fields
   const [sleepHours, setSleepHours] = useState(7);
@@ -105,6 +92,68 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
   const [brainFog, setBrainFog] = useState(2);
   
   const { toast } = useToast();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (open && user) {
+      loadEntries();
+    }
+  }, [open, user]);
+
+  const loadEntries = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('pain_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedEntries = data.map(entry => ({
+        id: entry.id,
+        date: entry.created_at,
+        intensity: entry.intensity,
+        location: entry.location || [],
+        quality: entry.quality || [],
+        impact: {
+          activity: entry.impact_activity || 0,
+          mood: entry.impact_mood || 0,
+          sleep: entry.impact_sleep || 0,
+          concentration: entry.impact_concentration || 0,
+        },
+        context: entry.context || [],
+        notes: entry.notes || "",
+        helped: entry.helped || [],
+        helpedEffectiveness: (entry.helped_effectiveness as { [key: string]: number }) || {},
+        sleepHours: entry.sleep_hours,
+        sleepQuality: entry.sleep_quality,
+        daytimeRest: entry.daytime_rest,
+        stress: entry.stress,
+        moodState: entry.mood_state,
+        socialConnection: entry.social_connection,
+        flareUp: entry.flare_up,
+        flareDuration: entry.flare_duration,
+        painSpikes: entry.pain_spikes,
+        fatigue: entry.fatigue,
+        brainFog: entry.brain_fog,
+      }));
+
+      setEntries(formattedEntries);
+    } catch (error) {
+      console.error('Error loading pain entries:', error);
+      toast({
+        title: "Error loading entries",
+        description: "Could not load your pain tracking data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const resetForm = () => {
     setIntensity([5]);
@@ -128,51 +177,90 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
     setBrainFog(2);
   };
 
-  const handleSave = () => {
-    const entry: PainEntry = {
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
-      intensity: intensity[0],
-      location: selectedLocations,
-      quality: selectedQualities,
-      impact,
-      context: selectedContext,
-      notes,
-      sleepHours,
-      sleepQuality,
-      daytimeRest,
-      stress,
-      moodState,
-      socialConnection,
-      flareUp,
-      flareDuration,
-      painSpikes,
-      fatigue,
-      brainFog,
-    };
+  const handleSave = async () => {
+    if (!user) return;
 
-    setEntries(prev => [entry, ...prev]);
-    setView('post-save');
-    toast({
-      title: "Saved. Thank you for checking in with your body.",
-      description: "Your pain log has been recorded.",
-    });
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('pain_entries')
+        .insert({
+          user_id: user.id,
+          intensity: intensity[0],
+          location: selectedLocations,
+          quality: selectedQualities,
+          impact_activity: impact.activity,
+          impact_mood: impact.mood,
+          impact_sleep: impact.sleep,
+          impact_concentration: impact.concentration,
+          context: selectedContext,
+          notes,
+          sleep_hours: sleepHours,
+          sleep_quality: sleepQuality,
+          daytime_rest: daytimeRest,
+          stress,
+          mood_state: moodState,
+          social_connection: socialConnection,
+          flare_up: flareUp,
+          flare_duration: flareDuration,
+          pain_spikes: painSpikes,
+          fatigue,
+          brain_fog: brainFog,
+        });
+
+      if (error) throw error;
+
+      setView('post-save');
+      toast({
+        title: "Saved. Thank you for checking in with your body.",
+        description: "Your pain log has been recorded.",
+      });
+
+      await loadEntries(); // Refresh the entries
+    } catch (error) {
+      console.error('Error saving pain entry:', error);
+      toast({
+        title: "Error saving entry",
+        description: "Could not save your pain tracking data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSaveHelped = () => {
-    if (entries.length > 0) {
-      const updatedEntries = [...entries];
-      updatedEntries[0] = { 
-        ...updatedEntries[0], 
-        helped: selectedHelped,
-        helpedEffectiveness 
-      };
-      setEntries(updatedEntries);
+  const handleSaveHelped = async () => {
+    if (!user || entries.length === 0) return;
+
+    setLoading(true);
+    try {
+      const latestEntry = entries[0];
+      const { error } = await supabase
+        .from('pain_entries')
+        .update({
+          helped: selectedHelped,
+          helped_effectiveness: helpedEffectiveness
+        })
+        .eq('id', latestEntry.id)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      resetForm();
+      setView('entry');
+      setSelectedHelped([]);
+      setHelpedEffectiveness({});
+      await loadEntries(); // Refresh the entries
+    } catch (error) {
+      console.error('Error updating pain entry:', error);
+      toast({
+        title: "Error updating entry",
+        description: "Could not update your pain tracking data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-    resetForm();
-    setView('entry');
-    setSelectedHelped([]);
-    setHelpedEffectiveness({});
   };
 
   const toggleSelection = (item: string, selected: string[], setSelected: (items: string[]) => void) => {
@@ -186,687 +274,503 @@ const PainTrackerDialog = ({ open, onOpenChange }: PainTrackerDialogProps) => {
   const renderInsights = () => {
     if (entries.length === 0) {
       return (
-        <div className="text-center py-12">
-          <BarChart3 className="w-12 h-12 text-pain-primary mx-auto mb-4" />
-          <p className="text-muted-foreground text-sm mb-2">
-            Start tracking to see your pain insights
+        <div className="text-center py-8">
+          <Activity className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">No data yet</h3>
+          <p className="text-muted-foreground mb-4">
+            Track some pain entries to see your insights and patterns
           </p>
-          <p className="text-xs text-muted-foreground">
-            Track at least a few entries to see patterns and trends.
-          </p>
+          <Button onClick={() => setView('entry')}>
+            Log Your First Entry
+          </Button>
         </div>
       );
     }
 
-    const avgPain = entries.reduce((sum, entry) => sum + entry.intensity, 0) / entries.length;
     const recentEntries = entries.slice(0, 7);
-    const weeklyAvg = recentEntries.reduce((sum, entry) => sum + entry.intensity, 0) / recentEntries.length;
+    const avgIntensity = recentEntries.reduce((sum, entry) => sum + entry.intensity, 0) / recentEntries.length;
     
-    // Find most common helpful strategies
-    const allHelped = entries.flatMap(entry => entry.helped || []);
-    const helpedCounts = allHelped.reduce((acc, item) => {
-      acc[item] = (acc[item] || 0) + 1;
-      return acc;
-    }, {} as { [key: string]: number });
-    const topHelped = Object.entries(helpedCounts)
+    const chartData = recentEntries.reverse().map((entry, index) => ({
+      day: `Day ${index + 1}`,
+      intensity: entry.intensity,
+      date: new Date(entry.date).toLocaleDateString()
+    }));
+
+    // Helper strategies based on what has been marked as helpful
+    const helpfulStrategies = entries
+      .filter(entry => entry.helped && entry.helped.length > 0)
+      .flatMap(entry => entry.helped || [])
+      .reduce((acc: { [key: string]: number }, strategy) => {
+        acc[strategy] = (acc[strategy] || 0) + 1;
+        return acc;
+      }, {});
+
+    const topStrategies = Object.entries(helpfulStrategies)
       .sort(([,a], [,b]) => b - a)
-      .slice(0, 3)
-      .map(([item]) => item);
+      .slice(0, 6);
 
     return (
-      <ScrollArea className="h-[400px]">
-        <div className="space-y-6">
-          {/* Weekly Summary Card */}
-          <div className="p-4 bg-pain-primary/5 rounded-lg border border-pain-primary/20">
-            <div className="flex items-center gap-2 mb-3">
-              <Calendar className="w-5 h-5 text-pain-primary" />
-              <h3 className="font-medium text-pain-primary">This Week's Reflection</h3>
+      <div className="space-y-6">
+        {/* Weekly Summary */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              This Week's Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{avgIntensity.toFixed(1)}</div>
+              <div className="text-sm text-muted-foreground">Avg Pain Level</div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              You've logged {entries.length} entries. Your average pain this week was {weeklyAvg.toFixed(1)}/10.
-              {topHelped.length > 0 && (
-                <> {topHelped[0]} appeared most often on easier days.</>
-              )}
-            </p>
-          </div>
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-secondary">{entries.length}</div>
+              <div className="text-sm text-muted-foreground">Total Entries</div>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Pain Timeline Graph */}
-          <div className="p-4 border rounded-lg">
-            <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5 text-pain-primary" />
-              <h3 className="font-medium">Pain Timeline</h3>
+        {/* Pain Timeline */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="w-5 h-5" />
+              Pain Level Timeline
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis domain={[0, 10]} />
+                  <Tooltip 
+                    labelFormatter={(label, payload) => {
+                      if (payload && payload[0]) {
+                        return payload[0].payload.date;
+                      }
+                      return label;
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="intensity" 
+                    stroke="hsl(var(--primary))" 
+                    strokeWidth={2}
+                    dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-            <div className="h-48">
-              <ChartContainer
-                config={{
-                  intensity: {
-                    label: "Pain Intensity",
-                    color: "hsl(var(--pain-primary))",
-                  },
-                }}
-                className="h-full w-full"
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={entries
-                      .slice(0, 14)
-                      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-                      .map((entry) => ({
-                        date: new Date(entry.date).toLocaleDateString('en-US', { 
-                          month: 'short', 
-                          day: 'numeric' 
-                        }),
-                        intensity: entry.intensity,
-                        fullDate: new Date(entry.date).toLocaleDateString(),
-                      }))}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                    <XAxis 
-                      dataKey="date" 
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis 
-                      domain={[0, 10]}
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (active && payload && payload.length) {
-                          return (
-                            <div className="rounded-lg border bg-background p-2 shadow-sm">
-                              <div className="grid grid-cols-2 gap-2">
-                                <div className="flex flex-col">
-                                  <span className="text-xs text-muted-foreground">
-                                    Date
-                                  </span>
-                                  <span className="text-sm font-bold">
-                                    {payload[0]?.payload?.fullDate}
-                                  </span>
-                                </div>
-                                <div className="flex flex-col">
-                                  <span className="text-xs text-muted-foreground">
-                                    Pain Level
-                                  </span>
-                                  <span className="text-sm font-bold text-pain-primary">
-                                    {payload[0]?.value}/10
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        }
-                        return null
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="intensity"
-                      stroke="hsl(var(--pain-primary))"
-                      strokeWidth={2}
-                      dot={{ fill: "hsl(var(--pain-primary))", strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, stroke: "hsl(var(--pain-primary))", strokeWidth: 2 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Most Helpful Strategies */}
-          {topHelped.length > 0 && (
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-medium mb-3">Your Comfort Toolkit</h3>
-              <div className="flex flex-wrap gap-2">
-                {topHelped.map((strategy) => (
-                  <span
-                    key={strategy}
-                    className="px-3 py-1.5 text-xs bg-pain-primary/10 text-pain-primary rounded-full border border-pain-primary/20"
-                  >
-                    {strategy} ({helpedCounts[strategy]}x)
-                  </span>
+        {/* Comfort Toolkit */}
+        {topStrategies.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Star className="w-5 h-5" />
+                Your Comfort Toolkit
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Strategies that have helped you most
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-2">
+                {topStrategies.map(([strategy, count]) => (
+                  <Badge key={strategy} variant="secondary" className="justify-center py-2">
+                    {strategy} ({count}x)
+                  </Badge>
                 ))}
               </div>
-            </div>
-          )}
+            </CardContent>
+          </Card>
+        )}
 
-          {/* Calendar Heatmap Preview */}
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-medium mb-3">Recent Pain Levels</h3>
+        {/* Calendar Preview */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Calendar Heatmap Preview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="grid grid-cols-7 gap-1">
               {Array.from({ length: 14 }, (_, i) => {
-                const date = new Date();
-                date.setDate(date.getDate() - (13 - i));
-                const entry = entries.find(e => 
-                  new Date(e.date).toDateString() === date.toDateString()
-                );
-                const intensity = entry?.intensity || 0;
-                const color = intensity === 0 ? 'bg-muted' : 
-                             intensity <= 3 ? 'bg-green-200' :
-                             intensity <= 6 ? 'bg-yellow-200' :
-                             intensity <= 8 ? 'bg-orange-200' : 'bg-red-200';
+                const dayEntry = entries.find(entry => {
+                  const entryDate = new Date(entry.date);
+                  const checkDate = new Date();
+                  checkDate.setDate(checkDate.getDate() - (13 - i));
+                  return entryDate.toDateString() === checkDate.toDateString();
+                });
+                
+                const intensity = dayEntry?.intensity || 0;
+                const opacity = intensity > 0 ? (intensity / 10) * 0.8 + 0.2 : 0.1;
                 
                 return (
                   <div
                     key={i}
-                    className={`w-6 h-6 rounded ${color} border border-border`}
-                    title={`${date.toLocaleDateString()}: ${intensity}/10`}
+                    className="aspect-square rounded-sm"
+                    style={{
+                      backgroundColor: intensity > 0 
+                        ? `hsl(var(--primary) / ${opacity})` 
+                        : 'hsl(var(--muted))',
+                    }}
+                    title={`Pain level: ${intensity}/10`}
                   />
                 );
               })}
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground mt-2">
-              <span>Less</span>
-              <span>More</span>
-            </div>
-          </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Last 14 days • Darker = Higher pain
+            </p>
+          </CardContent>
+        </Card>
 
-          {/* Entry History */}
-          <div className="p-4 border rounded-lg">
-            <h3 className="font-medium mb-4">Your Entry History</h3>
-            {entries.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="w-12 h-12 bg-pain-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Save className="w-6 h-6 text-pain-primary" />
-                </div>
-                <p className="text-muted-foreground text-sm">
-                  Your first check-in creates your pain timeline.
-                </p>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Your pain logs stay on your device unless you choose to export them.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4 max-h-80 overflow-y-auto">
-                <div className="text-xs text-muted-foreground text-center mb-4 p-2 bg-pain-primary/5 rounded-lg">
-                  Your pain logs stay on your device unless you choose to export them.
-                </div>
-                {entries.map((entry) => {
-                  const emojis = ["🌿", "🌊", "🌙", "☁️", "✨"];
-                  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-                  return (
-                    <div key={entry.id} className="p-3 border rounded-lg space-y-2 text-sm">
-                      <div className="flex justify-between items-start">
-                        <div className="text-sm text-muted-foreground flex items-center gap-2">
-                          <span>{emoji}</span>
-                          <span>{new Date(entry.date).toLocaleDateString()}</span>
-                          <span>• Pain: {entry.intensity}/10</span>
-                        </div>
-                      </div>
-                      {entry.location && entry.location.length > 0 && (
-                        <div className="text-xs">
-                          <span className="font-medium">Location:</span> {entry.location.join(', ')}
-                        </div>
-                      )}
-                      {entry.quality.length > 0 && (
-                        <div className="text-xs">
-                          <span className="font-medium">Type:</span> {entry.quality.join(', ')}
-                        </div>
-                      )}
-                      {entry.context.length > 0 && (
-                        <div className="text-xs">
-                          <span className="font-medium">Factors:</span> {entry.context.join(', ')}
-                        </div>
-                      )}
-                      {entry.helped && entry.helped.length > 0 && (
-                        <div className="text-xs">
-                          <span className="font-medium">What helped:</span> {entry.helped.join(', ')}
-                        </div>
-                      )}
-                      {entry.notes && (
-                        <div className="text-xs italic">"{entry.notes}"</div>
-                      )}
+        {/* Recent Entries */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              Recent Entries
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {entries.slice(0, 5).map((entry) => (
+                <div key={entry.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                  <div>
+                    <div className="font-medium">
+                      {new Date(entry.date).toLocaleDateString()}
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      </ScrollArea>
+                    <div className="text-sm text-muted-foreground">
+                      {entry.location.slice(0, 2).join(', ')}
+                      {entry.location.length > 2 && ` +${entry.location.length - 2} more`}
+                    </div>
+                  </div>
+                  <Badge variant={entry.intensity > 7 ? "destructive" : entry.intensity > 4 ? "secondary" : "default"}>
+                    {entry.intensity}/10
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] font-retro border-2 border-pain-primary/20 text-foreground backdrop-blur-sm rounded-2xl" style={{backgroundColor: 'hsl(var(--pain-bg))'}}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-retro text-2xl text-center flex items-center justify-center gap-3 text-pain-primary">
-            {view === 'insights' && (
-              <button
-                onClick={() => setView('entry')}
-                className="p-1 hover:bg-accent rounded-lg transition-colors"
+          <div className="flex items-center gap-2">
+            {(view === 'post-save' || view === 'insights') && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setView(view === 'post-save' ? 'entry' : 'entry')}
+                className="h-8 w-8"
               >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
             )}
-            {view === 'entry' && "Track your Trends and Symptoms"}
-            {view === 'post-save' && "What helped ease your pain today?"}
-            {view === 'insights' && "Your Pain Insights"}
-          </DialogTitle>
-          {view === 'entry' && (
-            <p className="text-sm text-muted-foreground text-center mt-2 px-4 mb-6">
-              Log a quick snapshot of your pain today. A few taps help you notice patterns over time.
-            </p>
-          )}
-          {view === 'insights' && (
-            <p className="text-sm text-muted-foreground text-center mt-2 px-4 mb-6">
-              Discover patterns and trends in your pain journey over time.
-            </p>
-          )}
+            <div className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-primary" />
+              <DialogTitle>
+                {view === 'entry' ? 'Pain Check-In' : 
+                 view === 'post-save' ? 'What Helped?' : 'Your Insights'}
+              </DialogTitle>
+            </div>
+          </div>
+          <DialogDescription>
+            {view === 'entry' 
+              ? 'Track your pain levels and discover patterns in your healing journey.'
+              : view === 'post-save'
+              ? 'Help us learn what brings you comfort and relief.'
+              : 'Understanding your pain patterns and effective strategies.'
+            }
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="overflow-y-auto h-full px-8 pb-8">
-          {view === 'entry' && (
-            <>
-              {/* View Insights Button */}
-              {entries.length > 0 && (
-                <div className="mb-6 flex justify-center">
-                  <Button 
-                    onClick={() => setView('insights')} 
-                    className="flex items-center gap-2 bg-pain-primary text-white hover:bg-pain-primary/90"
-                  >
-                    <BarChart3 className="w-4 h-4" />
-                    View Insights
-                  </Button>
-                </div>
-              )}
-
-              {/* Pain Intensity Slider */}
-              <div className="space-y-4 mb-8">
-                <label className="text-sm font-medium">Overall, how intense is your pain right now?</label>
-                <div className="px-3 py-2">
-                  <Slider
-                    value={intensity}
-                    onValueChange={setIntensity}
-                    max={10}
-                    min={0}
-                    step={1}
-                    className="w-full pain-slider"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-3">
-                    <span>0 = No pain</span>
-                    <span className="font-medium text-pain-primary">{intensity[0]}</span>
-                    <span>10 = Worst imaginable</span>
-                  </div>
+        <div className="space-y-6">
+          {view === 'entry' ? (
+            <div className="space-y-6">
+              {/* Pain Intensity */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Heart className="w-4 h-4" />
+                  Current Pain Level: {intensity[0]}/10
+                </label>
+                <Slider
+                  value={intensity}
+                  onValueChange={setIntensity}
+                  max={10}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>No pain</span>
+                  <span>Severe pain</span>
                 </div>
               </div>
 
-              {/* Body Location Selector */}
-              <div className="space-y-4 mb-8">
-                <label className="text-sm font-medium">Where is your pain located?</label>
-                <div className="flex flex-wrap gap-3">
-                  {bodyLocationOptions.map((location) => (
-                    <button
+              {/* Pain Location */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium">Where do you feel pain?</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {PAIN_LOCATIONS.map((location) => (
+                    <Button
                       key={location}
+                      variant={selectedLocations.includes(location) ? "default" : "outline"}
+                      size="sm"
                       onClick={() => toggleSelection(location, selectedLocations, setSelectedLocations)}
-                      className={`px-4 py-2 text-xs rounded-full border transition-colors ${
-                        selectedLocations.includes(location)
-                          ? 'bg-pain-primary text-white border-pain-primary shadow-sm'
-                          : 'bg-background border-border hover:border-pain-primary hover:bg-pain-primary/5'
-                      }`}
+                      className="text-xs"
                     >
                       {location}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Quality Selection */}
-              <div className="space-y-4 mb-8">
-                <label className="text-sm font-medium">What type of pain are you feeling right now?</label>
-                <div className="flex flex-wrap gap-3">
-                  {qualityOptions.map((quality) => (
-                    <button
+              {/* Pain Quality */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium">How would you describe the pain?</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {PAIN_QUALITIES.map((quality) => (
+                    <Button
                       key={quality}
+                      variant={selectedQualities.includes(quality) ? "default" : "outline"}
+                      size="sm"
                       onClick={() => toggleSelection(quality, selectedQualities, setSelectedQualities)}
-                      className={`px-4 py-2 text-xs rounded-full border transition-colors ${
-                        selectedQualities.includes(quality)
-                          ? 'bg-pain-primary text-white border-pain-primary shadow-sm'
-                          : 'bg-background border-border hover:border-pain-primary hover:bg-pain-primary/5'
-                      }`}
+                      className="text-xs"
                     >
                       {quality}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
 
               {/* Impact Assessment */}
-              <div className="space-y-5 mb-8">
-                <label className="text-sm font-medium">How much has pain interfered with…</label>
+              <div className="space-y-4">
+                <label className="text-sm font-medium">How is pain affecting you today?</label>
                 
-                {[
-                  { key: 'activity' as const, label: 'Your ability to do daily tasks' },
-                  { key: 'mood' as const, label: 'Your emotions and mental state' },
-                  { key: 'sleep' as const, label: 'Your ability to rest or sleep well' },
-                  { key: 'concentration' as const, label: 'Your ability to think clearly or concentrate (optional)' }
-                ].map(({ key, label }) => (
-                  <div key={key} className="space-y-3">
-                    <div className="flex justify-between text-xs">
-                      <span>{label}</span>
-                      <span className="text-pain-primary font-medium">{impact[key]}/5</span>
-                    </div>
-                    <div className="px-3 py-2">
-                      <Slider
-                        value={[impact[key]]}
-                        onValueChange={([value]) => setImpact(prev => ({ ...prev, [key]: value }))}
-                        max={5}
-                        min={0}
-                        step={1}
-                        className="w-full pain-slider"
-                      />
-                      <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                        <span>0 = Not at all</span>
-                        <span>5 = Severely</span>
-                      </div>
-                    </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm flex items-center gap-2">
+                      <Activity className="w-4 h-4" />
+                      Daily Activities: {impact.activity}/10
+                    </span>
                   </div>
-                ))}
+                  <Slider
+                    value={[impact.activity]}
+                    onValueChange={([value]) => setImpact(prev => ({ ...prev, activity: value }))}
+                    max={10}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm flex items-center gap-2">
+                      <Smile className="w-4 h-4" />
+                      Mood: {impact.mood}/10
+                    </span>
+                  </div>
+                  <Slider
+                    value={[impact.mood]}
+                    onValueChange={([value]) => setImpact(prev => ({ ...prev, mood: value }))}
+                    max={10}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm flex items-center gap-2">
+                      <Moon className="w-4 h-4" />
+                      Sleep Quality: {impact.sleep}/10
+                    </span>
+                  </div>
+                  <Slider
+                    value={[impact.sleep]}
+                    onValueChange={([value]) => setImpact(prev => ({ ...prev, sleep: value }))}
+                    max={10}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm flex items-center gap-2">
+                      <Brain className="w-4 h-4" />
+                      Concentration: {impact.concentration}/10
+                    </span>
+                  </div>
+                  <Slider
+                    value={[impact.concentration]}
+                    onValueChange={([value]) => setImpact(prev => ({ ...prev, concentration: value }))}
+                    max={10}
+                    step={1}
+                    className="w-full"
+                  />
+                </div>
               </div>
 
-              {/* Context Tags */}
-              <div className="space-y-4 mb-8">
-                <label className="text-sm font-medium">What factors might be influencing your pain right now?</label>
-                <div className="flex flex-wrap gap-3">
-                  {contextOptions.map((context) => (
-                    <button
+              {/* Context */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium">What might have contributed to this pain?</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {CONTEXT_OPTIONS.map((context) => (
+                    <Button
                       key={context}
+                      variant={selectedContext.includes(context) ? "default" : "outline"}
+                      size="sm"
                       onClick={() => toggleSelection(context, selectedContext, setSelectedContext)}
-                      className={`px-4 py-2 text-xs rounded-full border transition-colors ${
-                        selectedContext.includes(context)
-                          ? 'bg-pain-accent text-pain-accent-foreground border-pain-accent shadow-sm'
-                          : 'bg-background border-border hover:border-pain-accent hover:bg-pain-accent/5'
-                      }`}
+                      className="text-xs"
                     >
                       {context}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Sleep & Rest */}
-              <div className="space-y-5 mb-8">
-                <label className="text-sm font-medium">Sleep & Rest</label>
-                
+              {/* Additional tracking */}
+              <div className="space-y-4">
                 <div className="space-y-3">
-                  <div className="flex justify-between text-xs">
-                    <span>Hours of sleep last night</span>
-                    <span className="text-pain-primary font-medium">{sleepHours}h</span>
-                  </div>
-                  <div className="px-3 py-2">
-                    <Slider
-                      value={[sleepHours]}
-                      onValueChange={([value]) => setSleepHours(value)}
-                      max={12}
-                      min={0}
-                      step={0.5}
-                      className="w-full pain-slider"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-xs">Sleep quality</label>
-                  <div className="flex gap-2">
-                    {['Restful', 'Average', 'Restless'].map((quality) => (
-                      <button
-                        key={quality}
-                        onClick={() => setSleepQuality(quality)}
-                        className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                          sleepQuality === quality
-                            ? 'bg-pain-primary text-white border-pain-primary'
-                            : 'bg-background border-border hover:border-pain-primary'
-                        }`}
-                      >
-                        {quality}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="daytimeRest"
-                    checked={daytimeRest}
-                    onChange={(e) => setDaytimeRest(e.target.checked)}
-                    className="rounded border-border"
+                  <label className="text-sm font-medium">Stress Level: {stress}/5</label>
+                  <Slider
+                    value={[stress]}
+                    onValueChange={([value]) => setStress(value)}
+                    max={5}
+                    step={1}
+                    className="w-full"
                   />
-                  <label htmlFor="daytimeRest" className="text-xs">I napped or rested during the day</label>
-                </div>
-              </div>
-
-              {/* Emotional & Social */}
-              <div className="space-y-5 mb-8">
-                <label className="text-sm font-medium">Emotional & Social</label>
-                
-                <div className="space-y-3">
-                  <div className="flex justify-between text-xs">
-                    <span>Stress level</span>
-                    <span className="text-pain-primary font-medium">{stress}/5</span>
-                  </div>
-                  <div className="px-3 py-2">
-                    <Slider
-                      value={[stress]}
-                      onValueChange={([value]) => setStress(value)}
-                      max={5}
-                      min={0}
-                      step={1}
-                      className="w-full pain-slider"
-                    />
-                  </div>
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-xs">Mood check-in</label>
-                  <div className="flex flex-wrap gap-2">
-                    {moodOptions.map((mood) => (
-                      <button
-                        key={mood}
-                        onClick={() => setMoodState(mood)}
-                        className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                          moodState === mood
-                            ? 'bg-pain-primary text-white border-pain-primary'
-                            : 'bg-background border-border hover:border-pain-primary'
-                        }`}
-                      >
-                        {mood}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-xs">Social connection</label>
-                  <div className="flex flex-wrap gap-2">
-                    {socialOptions.map((social) => (
-                      <button
-                        key={social}
-                        onClick={() => setSocialConnection(social)}
-                        className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                          socialConnection === social
-                            ? 'bg-pain-primary text-white border-pain-primary'
-                            : 'bg-background border-border hover:border-pain-primary'
-                        }`}
-                      >
-                        {social}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Flare & Symptom Tracking */}
-              <div className="space-y-5 mb-8">
-                <label className="text-sm font-medium">Flare & Symptoms</label>
-                
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="flareUp"
-                    checked={flareUp}
-                    onChange={(e) => setFlareUp(e.target.checked)}
-                    className="rounded border-border"
+                  <label className="text-sm font-medium">Fatigue Level: {fatigue}/5</label>
+                  <Slider
+                    value={[fatigue]}
+                    onValueChange={([value]) => setFatigue(value)}
+                    max={5}
+                    step={1}
+                    className="w-full"
                   />
-                  <label htmlFor="flareUp" className="text-xs">I experienced a flare-up today</label>
-                </div>
-
-                {flareUp && (
-                  <div className="space-y-3">
-                    <label className="text-xs">Duration of flare</label>
-                    <div className="flex gap-2">
-                      {['Short', 'Moderate', 'All-day'].map((duration) => (
-                        <button
-                          key={duration}
-                          onClick={() => setFlareDuration(duration)}
-                          className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                            flareDuration === duration
-                              ? 'bg-pain-primary text-white border-pain-primary'
-                              : 'bg-background border-border hover:border-pain-primary'
-                          }`}
-                        >
-                          {duration}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-3">
-                  <div className="flex justify-between text-xs">
-                    <span>Fatigue level</span>
-                    <span className="text-pain-primary font-medium">{fatigue}/5</span>
-                  </div>
-                  <div className="px-3 py-2">
-                    <Slider
-                      value={[fatigue]}
-                      onValueChange={([value]) => setFatigue(value)}
-                      max={5}
-                      min={0}
-                      step={1}
-                      className="w-full pain-slider"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex justify-between text-xs">
-                    <span>Brain fog / concentration difficulties</span>
-                    <span className="text-pain-primary font-medium">{brainFog}/5</span>
-                  </div>
-                  <div className="px-3 py-2">
-                    <Slider
-                      value={[brainFog]}
-                      onValueChange={([value]) => setBrainFog(value)}
-                      max={5}
-                      min={0}
-                      step={1}
-                      className="w-full pain-slider"
-                    />
-                  </div>
                 </div>
               </div>
 
               {/* Notes */}
-              <div className="space-y-4 mb-8">
-                <label className="text-sm font-medium">Optional: Add a quick note</label>
+              <div className="space-y-3">
+                <label className="text-sm font-medium">Additional notes (optional)</label>
                 <Textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g., what made today easier or harder?"
-                  className="min-h-[100px] resize-none"
-                  maxLength={200}
+                  placeholder="Anything else you'd like to remember about how you're feeling today?"
+                  className="min-h-[80px]"
                 />
               </div>
 
-              {/* Save Button */}
-              <Button onClick={handleSave} className="w-full bg-pain-primary text-pain-primary-foreground hover:bg-pain-primary/80" size="lg">
-                <Save className="w-4 h-4 mr-2" />
-                Save Log
-              </Button>
-            </>
-          )}
-
-          {view === 'post-save' && (
-            <>
-              <div className="text-center py-6">
-                <div className="w-16 h-16 bg-pain-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Save className="w-8 h-8 text-pain-primary" />
-                </div>
-                <p className="text-sm text-muted-foreground mb-6">
-                  Your pain log has been saved. What helped ease your pain today?
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setView('insights')}
+                  className="flex-1"
+                >
+                  View Insights
+                </Button>
+                <Button 
+                  onClick={handleSave}
+                  disabled={loading}
+                  className="flex-1"
+                >
+                  {loading ? "Saving..." : "Save Entry"}
+                </Button>
+              </div>
+            </div>
+          ) : view === 'post-save' ? (
+            <div className="space-y-4">
+              <div className="text-center mb-6">
+                <Heart className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Thank you for checking in</h3>
+                <p className="text-muted-foreground">
+                  What has helped bring you comfort or relief today?
                 </p>
               </div>
 
-              {/* What Helped Selection */}
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-3">
-                  {helpedOptions.map((helped) => (
-                    <button
-                      key={helped}
-                      onClick={() => toggleSelection(helped, selectedHelped, setSelectedHelped)}
-                      className={`px-4 py-2 text-xs rounded-full border transition-colors ${
-                        selectedHelped.includes(helped)
-                          ? 'bg-pain-primary text-white border-pain-primary shadow-sm'
-                          : 'bg-background border-border hover:border-pain-primary hover:bg-pain-primary/5'
-                      }`}
+              <div className="space-y-3">
+                <label className="text-sm font-medium">What helped? (Select all that apply)</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {HELPED_OPTIONS.map((option) => (
+                    <Button
+                      key={option}
+                      variant={selectedHelped.includes(option) ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => toggleSelection(option, selectedHelped, setSelectedHelped)}
+                      className="text-xs"
                     >
-                      {helped}
-                    </button>
+                      {option}
+                    </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Effectiveness Rating */}
               {selectedHelped.length > 0 && (
-                <div className="space-y-4">
-                  <label className="text-sm font-medium">How much did it help?</label>
-                  {selectedHelped.map((helped) => (
-                    <div key={helped} className="space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span>{helped}</span>
-                        <span className="text-pain-primary font-medium">
-                          {helpedEffectiveness[helped] || 1}/3
+                <div className="space-y-3">
+                  <label className="text-sm font-medium">How effective was each strategy?</label>
+                  {selectedHelped.map((item) => (
+                    <div key={item} className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm">{item}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {helpedEffectiveness[item] || 1}/5
                         </span>
                       </div>
-                      <div className="flex gap-2">
-                        {['Not at all', 'A little', 'A lot'].map((level, index) => (
-                          <button
-                            key={level}
-                            onClick={() => setHelpedEffectiveness(prev => ({ ...prev, [helped]: index + 1 }))}
-                            className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
-                              (helpedEffectiveness[helped] || 1) === index + 1
-                                ? 'bg-pain-primary text-white border-pain-primary'
-                                : 'bg-background border-border hover:border-pain-primary'
-                            }`}
-                          >
-                            {level}
-                          </button>
-                        ))}
-                      </div>
+                      <Slider
+                        value={[helpedEffectiveness[item] || 1]}
+                        onValueChange={([value]) => 
+                          setHelpedEffectiveness(prev => ({ ...prev, [item]: value }))
+                        }
+                        max={5}
+                        step={1}
+                        className="w-full"
+                      />
                     </div>
                   ))}
                 </div>
               )}
 
-              <div className="flex gap-4 mt-8">
-                <Button variant="outline" onClick={() => { resetForm(); setView('entry'); }} className="flex-1">
-                  Skip
+              <div className="flex gap-3 mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={handleSaveHelped}
+                  disabled={loading}
+                  className="flex-1"
+                  
+                >
+                  {loading ? "Saving..." : "Skip for now"}
                 </Button>
-                <Button onClick={handleSaveHelped} className="flex-1">
-                  Save & Continue
+                <Button 
+                  onClick={handleSaveHelped}
+                  disabled={loading}
+                  className="flex-1"
+                >
+                  {loading ? "Saving..." : "Save & Finish"}
                 </Button>
               </div>
-            </>
+            </div>
+          ) : (
+            renderInsights()
           )}
-
-          {view === 'insights' && renderInsights()}
-
         </div>
       </DialogContent>
     </Dialog>

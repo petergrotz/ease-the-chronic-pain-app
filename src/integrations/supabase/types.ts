@@ -14,6 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
+      journal_entries: {
+        Row: {
+          body: string
+          created_at: string
+          emoji: string | null
+          id: string
+          prompt_text: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          emoji?: string | null
+          id?: string
+          prompt_text?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          emoji?: string | null
+          id?: string
+          prompt_text?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pain_entries: {
+        Row: {
+          brain_fog: number | null
+          context: string[]
+          created_at: string
+          daytime_rest: boolean | null
+          fatigue: number | null
+          flare_duration: string | null
+          flare_up: boolean | null
+          helped: string[] | null
+          helped_effectiveness: Json | null
+          id: string
+          impact_activity: number | null
+          impact_concentration: number | null
+          impact_mood: number | null
+          impact_sleep: number | null
+          intensity: number
+          location: string[]
+          mood_state: string | null
+          notes: string | null
+          pain_spikes: string | null
+          quality: string[]
+          sleep_hours: number | null
+          sleep_quality: string | null
+          social_connection: string | null
+          stress: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brain_fog?: number | null
+          context?: string[]
+          created_at?: string
+          daytime_rest?: boolean | null
+          fatigue?: number | null
+          flare_duration?: string | null
+          flare_up?: boolean | null
+          helped?: string[] | null
+          helped_effectiveness?: Json | null
+          id?: string
+          impact_activity?: number | null
+          impact_concentration?: number | null
+          impact_mood?: number | null
+          impact_sleep?: number | null
+          intensity: number
+          location?: string[]
+          mood_state?: string | null
+          notes?: string | null
+          pain_spikes?: string | null
+          quality?: string[]
+          sleep_hours?: number | null
+          sleep_quality?: string | null
+          social_connection?: string | null
+          stress?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brain_fog?: number | null
+          context?: string[]
+          created_at?: string
+          daytime_rest?: boolean | null
+          fatigue?: number | null
+          flare_duration?: string | null
+          flare_up?: boolean | null
+          helped?: string[] | null
+          helped_effectiveness?: Json | null
+          id?: string
+          impact_activity?: number | null
+          impact_concentration?: number | null
+          impact_mood?: number | null
+          impact_sleep?: number | null
+          intensity?: number
+          location?: string[]
+          mood_state?: string | null
+          notes?: string | null
+          pain_spikes?: string | null
+          quality?: string[]
+          sleep_hours?: number | null
+          sleep_quality?: string | null
+          social_connection?: string | null
+          stress?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
