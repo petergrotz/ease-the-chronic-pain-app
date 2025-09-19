@@ -48,15 +48,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithGoogle = async () => {
     try {
       const redirectUrl = `${window.location.origin}/dashboard`;
-      
-      const { error } = await supabase.auth.signInWithOAuth({
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
+          // Avoid iframe issues by handling the redirect manually
+          skipBrowserRedirect: true,
         }
       });
 
-      return { error };
+      if (error) return { error };
+
+      const url = data?.url;
+      if (url) {
+        try {
+          // Prefer navigating the top window so Google can render outside the iframe
+          if (window.top) {
+            (window.top as Window).location.href = url;
+          } else {
+            window.location.href = url;
+          }
+        } catch (_) {
+          // Fallback: open in a new tab if top-level navigation is blocked
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }
+      }
+
+      return { error: null };
     } catch (err) {
       return { error: err };
     }
