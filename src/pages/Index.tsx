@@ -9,27 +9,9 @@ const Index = () => {
 
   useEffect(() => {
     const checkUserName = async () => {
-      // Check localStorage first
-      const localName = localStorage.getItem("userName");
-      if (localName) {
-        setHasName(true);
-        return;
-      }
-
-      // Check Supabase profile
-      if (user) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("full_name")
-          .eq("user_id", user.id)
-          .single();
-
-        if (data?.full_name) {
-          setHasName(true);
-          return;
-        }
-      }
-
+      // Clear stored name to always show welcome screen (temporary for testing)
+      localStorage.removeItem("userName");
+      
       setHasName(false);
     };
 
