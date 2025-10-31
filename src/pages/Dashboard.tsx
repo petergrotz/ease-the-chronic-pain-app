@@ -83,8 +83,15 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-calm">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Subtle Breathing Circle Background */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="dashboard-circle-outer rounded-full bg-primary/15 blur-3xl" />
+        <div className="dashboard-circle-middle rounded-full bg-primary/20 blur-2xl" />
+        <div className="dashboard-circle-inner rounded-full bg-primary/25 blur-xl" />
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
@@ -242,6 +249,80 @@ const Dashboard = () => {
         open={painTrackerOpen} 
         onOpenChange={setPainTrackerOpen} 
       />
+
+      <style>{`
+        .dashboard-circle-outer,
+        .dashboard-circle-middle,
+        .dashboard-circle-inner {
+          position: absolute;
+        }
+
+        .dashboard-circle-outer {
+          width: 600px;
+          height: 600px;
+          animation: breathe-dashboard-outer 12s ease-in-out infinite;
+        }
+
+        .dashboard-circle-middle {
+          width: 450px;
+          height: 450px;
+          animation: breathe-dashboard-middle 12s ease-in-out infinite 1s;
+        }
+
+        .dashboard-circle-inner {
+          width: 300px;
+          height: 300px;
+          animation: breathe-dashboard-inner 12s ease-in-out infinite 2s;
+        }
+
+        @keyframes breathe-dashboard-outer {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.5;
+          }
+        }
+
+        @keyframes breathe-dashboard-middle {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.4;
+          }
+          50% {
+            transform: scale(1.25);
+            opacity: 0.6;
+          }
+        }
+
+        @keyframes breathe-dashboard-inner {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.3);
+            opacity: 0.7;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .dashboard-circle-outer {
+            width: 800px;
+            height: 800px;
+          }
+          .dashboard-circle-middle {
+            width: 600px;
+            height: 600px;
+          }
+          .dashboard-circle-inner {
+            width: 400px;
+            height: 400px;
+          }
+        }
+      `}</style>
     </div>
   );
 };
