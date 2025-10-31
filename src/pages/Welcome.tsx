@@ -47,7 +47,7 @@ const Welcome = () => {
       <div className={`relative z-10 text-center transition-all duration-1000 ${showWelcomeMessage ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
         {!showWelcomeMessage ? (
           <form onSubmit={handleNameSubmit} className="space-y-8 px-6">
-            <h1 className="text-4xl md:text-5xl font-light text-foreground mb-12 animate-[fade-in_2s_ease-out]">
+            <h1 className="text-4xl md:text-5xl font-light text-foreground mb-12 welcome-text-fade">
               Welcome to Ease, what should we call you...
             </h1>
             <Input
@@ -72,6 +72,22 @@ const Welcome = () => {
       </div>
 
       <style>{`
+        .welcome-text-fade {
+          animation: gentle-fade-in 4s ease-out forwards;
+          opacity: 0;
+        }
+
+        @keyframes gentle-fade-in {
+          0% {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         .breathing-circle-outer,
         .breathing-circle-middle,
         .breathing-circle-inner {
