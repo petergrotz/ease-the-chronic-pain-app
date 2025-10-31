@@ -28,10 +28,10 @@ const Welcome = () => {
     // Show welcome message
     setShowWelcomeMessage(true);
 
-    // Navigate to dashboard after animation
+    // Navigate to dashboard after animation + display time (2s fade in + 5s display + 2s fade out)
     setTimeout(() => {
       navigate("/dashboard");
-    }, 8000);
+    }, 9000);
   };
 
   return (
@@ -44,7 +44,7 @@ const Welcome = () => {
       </div>
 
       {/* Content */}
-      <div className={`relative z-10 text-center transition-all duration-1000 ${showWelcomeMessage ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
+      <div className="relative z-10 text-center">
         {!showWelcomeMessage ? (
           <form onSubmit={handleNameSubmit} className="space-y-8 px-6">
             <h1 className="text-4xl md:text-5xl font-light text-foreground mb-12 welcome-text-fade">
@@ -60,7 +60,7 @@ const Welcome = () => {
             />
           </form>
         ) : (
-          <div className="max-w-2xl mx-auto px-6 animate-fade-in">
+          <div className="max-w-2xl mx-auto px-6 welcome-message-fade">
             <h1 className="text-3xl md:text-4xl font-light text-foreground mb-6">
               Welcome {name} to Ease
             </h1>
@@ -74,6 +74,11 @@ const Welcome = () => {
       <style>{`
         .welcome-text-fade {
           animation: gentle-fade-in 4s ease-out 2s forwards;
+          opacity: 0;
+        }
+
+        .welcome-message-fade {
+          animation: gentle-fade-in 3s ease-out forwards;
           opacity: 0;
         }
 
