@@ -47,8 +47,8 @@ const Welcome = () => {
       <div className={`relative z-10 text-center transition-all duration-1000 ${showWelcomeMessage ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
         {!showWelcomeMessage ? (
           <form onSubmit={handleNameSubmit} className="space-y-8 px-6">
-            <h1 className="text-4xl md:text-5xl font-light text-foreground mb-12 animate-fade-in">
-              What should we call you...
+            <h1 className="text-4xl md:text-5xl font-light text-foreground mb-12 animate-[fade-in_2s_ease-out]">
+              Welcome to Ease, what should we call you...
             </h1>
             <Input
               type="text"
