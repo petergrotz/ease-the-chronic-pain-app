@@ -121,27 +121,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* User Profile Card */}
-        <Card className="mb-8 animate-in fade-in-50 duration-500">
-          <CardHeader>
-            <div className="flex items-center space-x-4">
-              <Avatar className="w-16 h-16">
-                <AvatarImage src={profile?.avatar_url || ""} alt="Profile" />
-                <AvatarFallback className="bg-primary text-primary-foreground text-lg">
-                  {profile?.full_name?.charAt(0) || profile?.email.charAt(0).toUpperCase() || <User className="w-6 h-6" />}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <CardTitle className="text-xl">
-                  {profile?.full_name || 'Welcome!'}
-                </CardTitle>
-                <CardDescription className="text-base">
-                  {profile?.email}
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
 
         {/* Main Navigation Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
