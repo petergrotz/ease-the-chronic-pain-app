@@ -35,10 +35,12 @@ const Welcome = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-b from-background to-muted/20 overflow-hidden relative">
-      {/* Breathing Circle Background */}
+    <div className="min-h-screen w-full flex items-center justify-center bg-background overflow-hidden relative">
+      {/* Breathing Circle Background - Headspace Style */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="breathing-circle rounded-full bg-primary/10 blur-3xl" />
+        <div className="breathing-circle-outer rounded-full bg-primary/20 blur-2xl" />
+        <div className="breathing-circle-middle rounded-full bg-primary/30 blur-xl" />
+        <div className="breathing-circle-inner rounded-full bg-primary/40 blur-lg" />
       </div>
 
       {/* Content */}
@@ -70,27 +72,75 @@ const Welcome = () => {
       </div>
 
       <style>{`
-        .breathing-circle {
-          width: 300px;
-          height: 300px;
-          animation: breathe 6s ease-in-out infinite;
+        .breathing-circle-outer,
+        .breathing-circle-middle,
+        .breathing-circle-inner {
+          position: absolute;
         }
 
-        @keyframes breathe {
+        .breathing-circle-outer {
+          width: 400px;
+          height: 400px;
+          animation: breathe-outer 8s ease-in-out infinite;
+        }
+
+        .breathing-circle-middle {
+          width: 300px;
+          height: 300px;
+          animation: breathe-middle 8s ease-in-out infinite 0.5s;
+        }
+
+        .breathing-circle-inner {
+          width: 200px;
+          height: 200px;
+          animation: breathe-inner 8s ease-in-out infinite 1s;
+        }
+
+        @keyframes breathe-outer {
           0%, 100% {
             transform: scale(1);
-            opacity: 0.3;
+            opacity: 0.4;
+          }
+          50% {
+            transform: scale(1.3);
+            opacity: 0.6;
+          }
+        }
+
+        @keyframes breathe-middle {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.4);
+            opacity: 0.7;
+          }
+        }
+
+        @keyframes breathe-inner {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.6;
           }
           50% {
             transform: scale(1.5);
-            opacity: 0.5;
+            opacity: 0.8;
           }
         }
 
         @media (min-width: 768px) {
-          .breathing-circle {
-            width: 500px;
-            height: 500px;
+          .breathing-circle-outer {
+            width: 600px;
+            height: 600px;
+          }
+          .breathing-circle-middle {
+            width: 450px;
+            height: 450px;
+          }
+          .breathing-circle-inner {
+            width: 300px;
+            height: 300px;
           }
         }
       `}</style>
