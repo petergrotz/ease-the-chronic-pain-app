@@ -67,6 +67,12 @@ const environmentData = {
     video: "/cozy-cabin-retreat-loop.mp4",
     audio: "/cozy-cabin-retreat-sound.mp3",
     image: "/lovable-uploads/64c38433-d24d-47ba-8bf7-ec4091688485.png"
+  },
+  12: {
+    name: "Autogenic Training",
+    video: null,
+    audio: "/forest-meadow-sound.mp3",
+    image: "/lovable-uploads/748617aa-4040-41be-b7c8-f0f7ee20928e.png"
   }
 };
 
@@ -79,23 +85,28 @@ const EnvironmentSession = () => {
   const painEducationAudioRef = useRef<HTMLAudioElement>(null);
   const pmrAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
   const activityPacingAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
+  const autogenicAudioRefs = useRef<(HTMLAudioElement | null)[]>([]);
   const [volume, setVolume] = useState([80]);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
   const [isBodyScanPlaying, setIsBodyScanPlaying] = useState(false);
   const [isPMRPlaying, setIsPMRPlaying] = useState(false);
   const [isActivityPacingPlaying, setIsActivityPacingPlaying] = useState(false);
   const [isPainEducationPlaying, setIsPainEducationPlaying] = useState(false);
+  const [isAutogenicPlaying, setIsAutogenicPlaying] = useState(false);
   const [currentPMRIndex, setCurrentPMRIndex] = useState(0);
   const [currentActivityPacingIndex, setCurrentActivityPacingIndex] = useState(0);
+  const [currentAutogenicIndex, setCurrentAutogenicIndex] = useState(0);
   const [pmrPauseTimeLeft, setPmrPauseTimeLeft] = useState(0);
   const [activityPacingPauseTimeLeft, setActivityPacingPauseTimeLeft] = useState(0);
+  const [autogenicPauseTimeLeft, setAutogenicPauseTimeLeft] = useState(0);
   const [audioProgress, setAudioProgress] = useState(0);
 
   const activityOptions = [
     "Body Scan",
     "Progressive Muscle Relaxation", 
     "Activity Pacing",
-    "Pain Education"
+    "Pain Education",
+    "Autogenic Training"
   ];
 
   const environment = environmentData[Number(environmentId) as keyof typeof environmentData];
@@ -169,6 +180,25 @@ const EnvironmentSession = () => {
         painEducationAudioRef.current.volume = volume[0] / 100;
         painEducationAudioRef.current.play().catch(console.warn);
       }
+    } else if (activity === "Autogenic Training") {
+      // Keep ambient audio playing in background, just lower its volume
+      if (audioRef.current) {
+        audioRef.current.volume = (volume[0] / 100) * 0.3;
+      }
+      
+      // Start Autogenic Training session
+      setIsAutogenicPlaying(true);
+      setCurrentAutogenicIndex(0);
+      setAudioProgress(0);
+      setAutogenicPauseTimeLeft(0);
+      
+      // Play first Autogenic audio
+      const firstAudio = autogenicAudioRefs.current[0];
+      if (firstAudio) {
+        firstAudio.currentTime = 0;
+        firstAudio.volume = volume[0] / 100;
+        firstAudio.play().catch(console.warn);
+      }
     }
   };
 
@@ -199,6 +229,93 @@ const EnvironmentSession = () => {
       audio.removeEventListener('ended', handleEnded);
     };
   }, [environment.audio, volume]);
+
+  // Setup Autogenic Training audio management
+  useEffect(() => {
+    if (!isAutogenicPlaying) return;
+
+    const currentAudio = autogenicAudioRefs.current[currentAutogenicIndex];
+    if (!currentAudio) return;
+
+    const handleTimeUpdate = () => {
+      // Calculate total progress across all exercises and pauses
+      const totalExercises = 25;
+      const pauseDuration = 3; // seconds
+      const exerciseSegmentWeight = 100 / (totalExercises + (totalExercises - 1) * (pauseDuration / 60)); // Assume ~60s per exercise
+      
+      let totalProgress = 0;
+      
+      // Add progress from completed exercises
+      for (let i = 0; i < currentAutogenicIndex; i++) {
+        totalProgress += exerciseSegmentWeight;
+        if (i < totalExercises - 1) {
+          totalProgress += exerciseSegmentWeight * (pauseDuration / 60);
+        }
+      }
+      
+      // Add progress from current exercise or pause
+      if (autogenicPauseTimeLeft > 0) {
+        // During pause
+        const pauseProgress = ((pauseDuration - autogenicPauseTimeLeft) / pauseDuration) * exerciseSegmentWeight * (pauseDuration / 60);
+        totalProgress += exerciseSegmentWeight + pauseProgress;
+      } else {
+        // During exercise
+        const exerciseProgress = (currentAudio.currentTime / currentAudio.duration) * exerciseSegmentWeight;
+        totalProgress += exerciseProgress;
+      }
+      
+      setAudioProgress(Math.min(totalProgress, 100));
+    };
+
+    const handleEnded = () => {
+      if (currentAutogenicIndex < 24) {
+        // Start 3-second pause before next exercise
+        setAutogenicPauseTimeLeft(3);
+        
+        const pauseInterval = setInterval(() => {
+          setAutogenicPauseTimeLeft((prev) => {
+            if (prev <= 1) {
+              clearInterval(pauseInterval);
+              // Move to next exercise
+              setCurrentAutogenicIndex((prevIndex) => prevIndex + 1);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        // All exercises completed
+        setIsAutogenicPlaying(false);
+        setCurrentAutogenicIndex(0);
+        setAudioProgress(100);
+        setAutogenicPauseTimeLeft(0);
+        // Restore ambient audio volume
+        if (audioRef.current && environment.audio) {
+          audioRef.current.volume = volume[0] / 100;
+        }
+      }
+    };
+
+    currentAudio.addEventListener('timeupdate', handleTimeUpdate);
+    currentAudio.addEventListener('ended', handleEnded);
+
+    return () => {
+      currentAudio.removeEventListener('timeupdate', handleTimeUpdate);
+      currentAudio.removeEventListener('ended', handleEnded);
+    };
+  }, [isAutogenicPlaying, currentAutogenicIndex, autogenicPauseTimeLeft, environment.audio, volume]);
+
+  // Start next Autogenic exercise after pause
+  useEffect(() => {
+    if (isAutogenicPlaying && autogenicPauseTimeLeft === 0 && currentAutogenicIndex > 0) {
+      const nextAudio = autogenicAudioRefs.current[currentAutogenicIndex];
+      if (nextAudio) {
+        nextAudio.currentTime = 0;
+        nextAudio.volume = volume[0] / 100;
+        nextAudio.play().catch(console.warn);
+      }
+    }
+  }, [currentAutogenicIndex, autogenicPauseTimeLeft, isAutogenicPlaying, volume]);
 
   // Setup pain education audio event listeners
   useEffect(() => {
@@ -439,7 +556,7 @@ const EnvironmentSession = () => {
   useEffect(() => {
     if (audioRef.current) {
       // If any session is playing, keep ambient audio at lower volume, otherwise full volume
-      audioRef.current.volume = (isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying || isPainEducationPlaying) ? (volume[0] / 100) * 0.3 : volume[0] / 100;
+      audioRef.current.volume = (isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying || isPainEducationPlaying || isAutogenicPlaying) ? (volume[0] / 100) * 0.3 : volume[0] / 100;
     }
     if (bodyScanAudioRef.current) {
       bodyScanAudioRef.current.volume = volume[0] / 100;
@@ -459,7 +576,13 @@ const EnvironmentSession = () => {
         audio.volume = volume[0] / 100;
       }
     });
-  }, [volume, isBodyScanPlaying, isPMRPlaying, isActivityPacingPlaying, isPainEducationPlaying]);
+    // Update Autogenic Training audio volumes
+    autogenicAudioRefs.current.forEach((audio) => {
+      if (audio) {
+        audio.volume = volume[0] / 100;
+      }
+    });
+  }, [volume, isBodyScanPlaying, isPMRPlaying, isActivityPacingPlaying, isPainEducationPlaying, isAutogenicPlaying]);
 
   if (!environment) {
     return null;
@@ -539,11 +662,26 @@ const EnvironmentSession = () => {
         </audio>
       ))}
 
+      {/* Autogenic Training Audio Files */}
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25].map((num) => (
+        <audio 
+          key={num}
+          ref={(el) => {
+            if (autogenicAudioRefs.current) {
+              autogenicAudioRefs.current[num - 1] = el;
+            }
+          }}
+          preload="auto"
+        >
+          <source src={`/Autogenic_${num}.mp3`} type="audio/mpeg" />
+        </audio>
+      ))}
+
       {/* Overlay for better text visibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
 
       {/* Progress Bar - Top of Screen */}
-      {(isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying || isPainEducationPlaying) && (
+      {(isBodyScanPlaying || isPMRPlaying || isActivityPacingPlaying || isPainEducationPlaying || isAutogenicPlaying) && (
         <div className="absolute top-0 left-0 right-0 z-30 p-4">
           <Progress 
             value={audioProgress} 
@@ -565,7 +703,7 @@ const EnvironmentSession = () => {
       </div>
 
       {/* Start Session Dropdown - Center */}
-      {!isBodyScanPlaying && !isPMRPlaying && !isActivityPacingPlaying && !isPainEducationPlaying && (
+      {!isBodyScanPlaying && !isPMRPlaying && !isActivityPacingPlaying && !isPainEducationPlaying && !isAutogenicPlaying && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="text-center">
             <DropdownMenu>

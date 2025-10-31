@@ -16,6 +16,7 @@ const cozyMountainLodge = "/lovable-uploads/64c38433-d24d-47ba-8bf7-ec4091688485
 const verdantGreenhouse = "/lovable-uploads/5b071dfe-e537-46ea-b5ef-2eb7374076c4.png";
 const catCafe = "/lovable-uploads/5d39738b-cee2-4aeb-b213-58a4eed50438.png";
 const lakesideRetreat = "/lovable-uploads/e5e6ddbd-8f7f-47b3-97ec-37cb07049f25.png";
+import autogenicTraining from "@/assets/environments/autogenic-training.png";
 
 const environments = [
   {
@@ -77,6 +78,12 @@ const environments = [
     name: "Cozy Mountain Lodge",
     image: cozyMountainLodge,
     description: "Warm lodge with fireplace and snowy views"
+  },
+  {
+    id: 12,
+    name: "Autogenic Training",
+    image: autogenicTraining,
+    description: "Deep relaxation through guided self-suggestions"
   }
 ];
 
