@@ -9,6 +9,7 @@ import { Loader2, LogOut, User, Home, Heart, BookOpen, BarChart3, Settings } fro
 import { toast } from '@/hooks/use-toast';
 import JournalDialog from '@/components/JournalDialog';
 import PainTrackerDialog from '@/components/PainTrackerDialog';
+import EnvironmentCarousel from '@/components/EnvironmentCarousel';
 
 const easeLogoClouds = "/lovable-uploads/ab156088-a078-4ea1-ab55-6f47188c6e4f.png";
 
@@ -203,6 +204,11 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
+        </div>
+
+        {/* Environment Selection Carousel */}
+        <div className="mb-12 animate-in fade-in-50 slide-in-from-bottom-4 duration-700 delay-250">
+          <EnvironmentCarousel />
         </div>
 
         {/* Quick Actions */}
