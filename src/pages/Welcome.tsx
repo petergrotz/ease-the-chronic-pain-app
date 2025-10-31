@@ -38,9 +38,9 @@ const Welcome = () => {
     <div className="min-h-screen w-full flex items-center justify-center bg-background overflow-hidden relative">
       {/* Breathing Circle Background - Headspace Style */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="breathing-circle-outer rounded-full bg-primary/20 blur-2xl" />
-        <div className="breathing-circle-middle rounded-full bg-primary/30 blur-xl" />
-        <div className="breathing-circle-inner rounded-full bg-primary/40 blur-lg" />
+        <div className="breathing-circle-outer rounded-full bg-primary/30 blur-xl" />
+        <div className="breathing-circle-middle rounded-full bg-primary/40 blur-lg" />
+        <div className="breathing-circle-inner rounded-full bg-primary/50 blur-md" />
       </div>
 
       {/* Content */}
@@ -99,33 +99,33 @@ const Welcome = () => {
         @keyframes breathe-outer {
           0%, 100% {
             transform: scale(1);
-            opacity: 0.4;
+            opacity: 0.6;
           }
           50% {
             transform: scale(1.3);
-            opacity: 0.6;
+            opacity: 0.8;
           }
         }
 
         @keyframes breathe-middle {
           0%, 100% {
             transform: scale(1);
-            opacity: 0.5;
+            opacity: 0.7;
           }
           50% {
             transform: scale(1.4);
-            opacity: 0.7;
+            opacity: 0.9;
           }
         }
 
         @keyframes breathe-inner {
           0%, 100% {
             transform: scale(1);
-            opacity: 0.6;
+            opacity: 0.8;
           }
           50% {
             transform: scale(1.5);
-            opacity: 0.8;
+            opacity: 1;
           }
         }
 
