@@ -30,7 +30,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/login');
+      // No auth: load dashboard without profile
+      setLoading(false);
       return;
     }
 
@@ -66,7 +67,7 @@ const Dashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/login');
+    navigate('/');
   };
 
   if (authLoading || loading) {
@@ -106,14 +107,16 @@ const Dashboard = () => {
               <Home className="w-4 h-4" />
               <span>Home</span>
             </Button>
-            <Button
-              variant="outline"
-              onClick={handleSignOut}
-              className="flex items-center space-x-2"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Sign Out</span>
-            </Button>
+            {user && (
+              <Button
+                variant="outline"
+                onClick={handleSignOut}
+                className="flex items-center space-x-2"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
+              </Button>
+            )}
           </div>
         </div>
 
