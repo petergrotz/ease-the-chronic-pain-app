@@ -55,7 +55,7 @@ const Welcome = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
-              className="max-w-md mx-auto text-center text-2xl h-14 bg-background/50 backdrop-blur-sm border-primary/20 focus-visible:border-primary/40 transition-all"
+              className="max-w-md mx-auto text-center text-3xl h-16 bg-background/50 backdrop-blur-sm border-primary/20 focus-visible:border-primary/40 transition-all"
               autoFocus
             />
           </form>
@@ -73,7 +73,7 @@ const Welcome = () => {
 
       <style>{`
         .welcome-text-fade {
-          animation: gentle-fade-in 4s ease-out forwards;
+          animation: gentle-fade-in 4s ease-out 2s forwards;
           opacity: 0;
         }
 
